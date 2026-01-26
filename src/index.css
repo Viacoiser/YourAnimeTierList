@@ -1,0 +1,96 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-neutral-800;
+  }
+  
+  body {
+    @apply bg-black text-neutral-100 antialiased;
+    @apply font-sans;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    @apply w-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-premium-black-400;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-premium-red-700 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-premium-red-600;
+  }
+}
+
+@layer components {
+  /* Glassmorphism effect */
+  .glass {
+    @apply bg-white/5 backdrop-blur-md border border-white/10;
+  }
+
+  .glass-dark {
+    @apply bg-black/40 backdrop-blur-lg border border-white/5;
+  }
+
+  /* Premium button styles */
+  .btn-premium {
+    @apply px-6 py-3 rounded-lg font-semibold transition-all duration-300;
+    @apply bg-premium-red-600 text-white;
+    @apply hover:bg-premium-red-700 hover:shadow-premium;
+    @apply active:scale-95;
+  }
+
+  .btn-secondary {
+    @apply px-6 py-3 rounded-lg font-semibold transition-all duration-300;
+    @apply bg-premium-black-200 text-neutral-100;
+    @apply hover:bg-premium-black-100 hover:shadow-lg;
+    @apply active:scale-95;
+  }
+
+  /* Premium card */
+  .card-premium {
+    @apply bg-premium-black-300 rounded-xl p-6;
+    @apply border border-premium-black-100;
+    @apply transition-all duration-300;
+    @apply hover:border-premium-red-900 hover:shadow-premium-sm;
+  }
+
+  /* Input styles */
+  .input-premium {
+    @apply w-full px-4 py-3 rounded-lg;
+    @apply bg-premium-black-400 border-2 border-premium-black-200;
+    @apply text-neutral-100 placeholder-neutral-500;
+    @apply focus:outline-none focus:border-premium-red-600 focus:ring-2 focus:ring-premium-red-600/20;
+    @apply transition-all duration-200;
+  }
+}
+
+@layer utilities {
+  .text-gradient-red {
+    @apply bg-gradient-to-r from-premium-red-500 via-premium-red-600 to-premium-red-700;
+    @apply bg-clip-text text-transparent;
+  }
+
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes glow {
+    from {
+      text-shadow: 0 0 10px rgba(220, 38, 38, 0.5), 0 0 20px rgba(220, 38, 38, 0.3);
+    }
+    to {
+      text-shadow: 0 0 20px rgba(220, 38, 38, 0.8), 0 0 30px rgba(220, 38, 38, 0.5);
+    }
+  }
+}

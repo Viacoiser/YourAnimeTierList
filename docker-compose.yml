@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  # ========== BASE DE DATOS ==========
+  db:
+    image: mysql:8.0
+    container_name: anime_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: your_anime_tierlist
+    ports:
+      - "3306:3306"
+    volumes:
+      # Persistir datos de MySQL
+      - db_data:/var/lib/mysql
+      # Ejecutar scripts SQL al iniciar
+      - ./server/db_schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - ./server/add_messages_table.sql:/docker-entrypoint-initdb.d/02-messages.sql
+    networks:
+      - anime_network
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ========== BACKEND ==========
+  backend:
+    build: ./server
+    container_name: anime_backend
+    restart: always
+    ports:
+      - "3003:3003"
+    environment:
+      DB_HOST: db
+      DB_USER: root
+      DB_PASSWORD: rootpassword
+      DB_NAME: your_anime_tierlist
+      JWT_SECRET: tu_secreto_super_seguro_cambialo_en_produccion
+      CLIENT_URL: http://localhost:5173
+      NODE_ENV: development
+      PORT: 3003
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - anime_network
+    volumes:
+      # Sincronizar código para desarrollo (hot reload)
+      - ./server:/usr/src/app
+      - /usr/src/app/node_modules
+
+  # ========== FRONTEND ==========
+  frontend:
+    build: .
+    container_name: anime_frontend
+    restart: always
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_URL: http://localhost:3003
+      VITE_SOCKET_URL: http://localhost:3003
+    depends_on:
+      - backend
+    networks:
+      - anime_network
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+# ========== REDES ==========
+networks:
+  anime_network:
+    driver: bridge
+
+# ========== VOLÚMENES ==========
+volumes:
+  db_data:

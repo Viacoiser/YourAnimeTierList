@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test API AnimeThemes</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #1a1a2e;
+            color: #fff;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #results {
+            background: #0f3460;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        .success { color: #4caf50; }
+        .error { color: #f44336; }
+        .info { color: #2196f3; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test API AnimeThemes - Búsqueda de "boku"</h1>
+    
+    <button onclick="testSearch()">Test /search endpoint</button>
+    <button onclick="testAnimeFilter()">Test /anime con filter</button>
+    <button onclick="testAnimeWide()">Test /anime amplio</button>
+    
+    <div id="results"></div>
+
+    <script>
+        const API_BASE_URL = 'https://api.animethemes.moe';
+        const resultsDiv = document.getElementById('results');
+
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            resultsDiv.innerHTML += `<div class="${type}">[${timestamp}] ${message}</div>`;
+        }
+
+        async function testSearch() {
+            resultsDiv.innerHTML = '';
+            log('🔍 Probando endpoint /search con query="boku"', 'info');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/search?q=boku&limit=10`);
+                const data = await response.json();
+                
+                log('✅ Respuesta recibida', 'success');
+                log('Estructura: ' + JSON.stringify(Object.keys(data), null, 2));
+                
+                if (data.search && data.search.anime) {
+                    log(`✅ Encontrados ${data.search.anime.length} anime`, 'success');
+                    data.search.anime.forEach(anime => {
+                        log(`  - ${anime.name} (${anime.year || 'N/A'})`, 'info');
+                    });
+                } else {
+                    log('⚠️ No se encontró data.search.anime', 'error');
+                    log('Respuesta completa: ' + JSON.stringify(data, null, 2));
+                }
+            } catch (error) {
+                log('❌ Error: ' + error.message, 'error');
+            }
+        }
+
+        async function testAnimeFilter() {
+            resultsDiv.innerHTML = '';
+            log('🔍 Probando endpoint /anime con filter[name]=boku', 'info');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/anime?filter[name]=boku&fields[anime]=id,name,year,slug&page[size]=10`);
+                const data = await response.json();
+                
+                log('✅ Respuesta recibida', 'success');
+                
+                if (data.anime) {
+                    log(`✅ Encontrados ${data.anime.length} anime`, 'success');
+                    data.anime.forEach(anime => {
+                        log(`  - ${anime.name} (${anime.year || 'N/A'})`, 'info');
+                    });
+                } else {
+                    log('⚠️ No se encontró data.anime', 'error');
+                    log('Respuesta completa: ' + JSON.stringify(data, null, 2));
+                }
+            } catch (error) {
+                log('❌ Error: ' + error.message, 'error');
+            }
+        }
+
+        async function testAnimeWide() {
+            resultsDiv.innerHTML = '';
+            log('🔍 Probando /anime sin filtro y filtrando en cliente', 'info');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/anime?fields[anime]=id,name,year,slug&page[size]=100`);
+                const data = await response.json();
+                
+                log('✅ Respuesta recibida', 'success');
+                
+                if (data.anime) {
+                    const filtered = data.anime.filter(anime => 
+                        anime.name.toLowerCase().includes('boku')
+                    );
+                    
+                    log(`✅ Total descargados: ${data.anime.length}`, 'success');
+                    log(`✅ Filtrados con "boku": ${filtered.length}`, 'success');
+                    
+                    filtered.slice(0, 10).forEach(anime => {
+                        log(`  - ${anime.name} (${anime.year || 'N/A'})`, 'info');
+                    });
+                }
+            } catch (error) {
+                log('❌ Error: ' + error.message, 'error');
+            }
+        }
+
+        // Auto-ejecutar el primer test
+        setTimeout(testSearch, 500);
+    </script>
+</body>
+</html>
