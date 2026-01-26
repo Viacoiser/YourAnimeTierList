@@ -1,4 +1,4 @@
-# Anime Watch Party 🎬
+# Anime Watch Party
 
 Una aplicación web de React para ver y rankear openings/endings de anime en salas compartidas.
 
@@ -99,5 +99,6 @@ MIT
 ## 📝 Colaboradores
 
 - [Viaco](https://github.com/Viaco)
+
 
 
