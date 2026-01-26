@@ -2,7 +2,7 @@
 
 Una aplicación web de React para ver y rankear openings/endings de anime en salas compartidas.
 
-## 🚀 Características
+## Características
 
 - **Salas de Watch Party**: Crea e invita a amigos a salas compartidas
 - **Reproductor de Videos**: Visualiza openings y endings de anime usando la API de AnimeThemes
@@ -10,12 +10,12 @@ Una aplicación web de React para ver y rankear openings/endings de anime en sal
 - **Sincronización en Tiempo Real**: Todos en la sala ven el mismo contenido
 - **Interfaz Intuitiva**: Diseño moderno y fácil de usar
 
-## 📋 Requisitos Previos
+## Requisitos Previos
 
 - Node.js (v18 o superior)
 - npm o yarn
 
-## 🛠️ Instalación
+## Instalación
 
 1. Clona el repositorio o descarga los archivos
 
@@ -31,7 +31,7 @@ npm run dev
 
 4. Abre tu navegador en `http://localhost:3000`
 
-## 🎮 Uso
+## Uso
 
 ### Crear una Sala
 1. En la página principal, haz clic en "Crear Sala"
@@ -47,7 +47,7 @@ npm run dev
 - Después de cada video, podrás asignarle un tier (S, A, B, C, D, F)
 - Al final de la sesión, verás un resumen con todos los rankings
 
-## 🏗️ Estructura del Proyecto
+## Estructura del Proyecto
 
 ```
 anime-watch-party/
@@ -70,16 +70,16 @@ anime-watch-party/
 └── vite.config.js
 ```
 
-## 🔌 API Utilizada
+## API Utilizada
 
 Este proyecto utiliza la [AnimeThemes API](https://api-docs.animethemes.moe/) para obtener videos de openings y endings de anime.
 
-## 📝 Notas
+## Notas
 
 - **Modo Demo**: Actualmente, la sincronización entre usuarios es simulada localmente. Para producción, necesitarás implementar un backend con WebSockets (Socket.io) para sincronización real.
 - **Backend Opcional**: Si deseas sincronización real entre usuarios, necesitarás un servidor Node.js con Socket.io.
 
-## 🚀 Próximas Mejoras
+## Próximas Mejoras
 
 - [ ] Backend con WebSockets para sincronización real
 - [ ] Sistema de autenticación
@@ -94,9 +94,10 @@ MIT
 
 ## 📝 Autor
 
-[Tulita](https://github.com/Viaco)
+[Viaco](https://github.com/Viaco)
 
 ## 📝 Colaboradores
 
-- [Tulita](https://github.com/Viaco)
+- [Viaco](https://github.com/Viaco)
+
 
