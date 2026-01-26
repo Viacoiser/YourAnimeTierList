@@ -88,17 +88,18 @@ Este proyecto utiliza la [AnimeThemes API](https://api-docs.animethemes.moe/) pa
 - [ ] Historial de rankings
 - [ ] Compartir tier lists en redes sociales
 
-## 📄 Licencia
+## Licencia
 
 MIT
 
-## 📝 Autor
+## Autor
 
 [Viaco](https://github.com/Viaco)
 
-## 📝 Colaboradores
+## Colaboradores
 
 - [Viaco](https://github.com/Viaco)
+
 
 
 
