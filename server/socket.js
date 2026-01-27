@@ -17,21 +17,41 @@ function setupSocket(server) {
         console.log('✅ Usuario conectado:', socket.id);
 
         // ========== CREAR SALA ==========
-        socket.on('create-room', ({ roomId, roomName, userId, userName }) => {
-            activeRooms.set(roomId, {
-                roomId,
-                roomName,
+        socket.on('create-room', ({ roomId, userId, userName, roomName, waitMode }) => {
+            if (activeRooms.has(roomId)) {
+                socket.emit('error', { message: 'La sala ya existe' });
+                return;
+            }
+
+            const room = {
+                id: roomId,
                 host: userId,
-                members: [{ id: userId, name: userName, socketId: socket.id, isHost: true }],
+                name: roomName,
+                members: [],
                 playlist: [],
                 currentVideoIndex: 0,
-                isPlaying: false,
-                rankings: {}
-            });
+                isPlaying: !waitMode, // Auto-play si NO es WaitMode
+                rankings: {},
+                waitMode: !!waitMode,
+                usersReady: new Set()
+            };
+
+            // Añadir al creador como primer miembro (y host)
+            room.members.push({ id: userId, name: userName, socketId: socket.id, isHost: true });
+            activeRooms.set(roomId, room);
 
             socket.join(roomId);
-            socket.emit('room-created', { roomId, room: activeRooms.get(roomId) });
-            console.log(`🏠 Sala creada: ${roomId} por ${userName}`);
+
+            // Serializar Set para envío y añadir propiedades que el cliente espera
+            const roomToSend = {
+                ...room,
+                roomId: room.id,  // Cliente espera roomId
+                roomName: room.name,  // Cliente espera roomName
+                usersReady: Array.from(room.usersReady)
+            };
+            socket.emit('room-created', { roomId, room: roomToSend });
+
+            console.log(`🏠 Sala creada: ${roomId} por ${userName} (WaitMode: ${room.waitMode})`);
         });
 
         // ========== UNIRSE A SALA ==========
@@ -55,8 +75,14 @@ function setupSocket(server) {
 
             socket.join(roomId);
 
-            // Enviar estado actual de la sala al usuario que se une
-            socket.emit('room-joined', { room });
+            // Enviar estado actual (serializar Set y añadir propiedades que el cliente espera)
+            const roomToSend = {
+                ...room,
+                roomId: room.id,  // Cliente espera roomId
+                roomName: room.name,  // Cliente espera roomName
+                usersReady: room.usersReady ? Array.from(room.usersReady) : []
+            };
+            socket.emit('room-joined', { room: roomToSend });
 
             // Notificar a todos los demás miembros
             socket.to(roomId).emit('member-joined', {
@@ -88,6 +114,10 @@ function setupSocket(server) {
             room.playlist = playlist.map(v => ({ ...v, uuid: crypto.randomUUID() }));
             room.currentVideoIndex = 0;
 
+            // Resetear listos si WaitMode activo
+            if (room.usersReady) room.usersReady.clear();
+            io.to(roomId).emit('users-ready-updated', { usersReady: [] });
+
             io.to(roomId).emit('playlist-updated', { playlist: room.playlist });
             console.log(`📝 Playlist establecida en sala ${roomId} (${playlist.length} videos)`);
         });
@@ -112,6 +142,26 @@ function setupSocket(server) {
             console.log(`⏸️ Pause en sala ${roomId}`);
         });
 
+        // ========== SEEK ==========
+        socket.on('seek-video', ({ roomId, currentTime }) => {
+            const room = activeRooms.get(roomId);
+            if (!room) return;
+
+            // Broadcast seek to all users in room
+            io.to(roomId).emit('video-seeked', { currentTime });
+            console.log(`⏩ Seek en sala ${roomId} a ${currentTime.toFixed(2)}s`);
+        });
+
+        // ========== SEEK ==========
+        socket.on('seek-video', ({ roomId, currentTime }) => {
+            const room = activeRooms.get(roomId);
+            if (!room) return;
+
+            // Broadcast seek to all users in room
+            io.to(roomId).emit('video-seeked', { currentTime });
+            console.log(`⏩ Seek en sala ${roomId} a ${currentTime.toFixed(2)}s`);
+        });
+
         // ========== SIGUIENTE VIDEO ==========
         socket.on('next-video', ({ roomId }) => {
             const room = activeRooms.get(roomId);
@@ -119,12 +169,17 @@ function setupSocket(server) {
 
             if (room.currentVideoIndex < room.playlist.length - 1) {
                 room.currentVideoIndex++;
-                room.isPlaying = true;
+                room.isPlaying = !room.waitMode; // Auto-play solo si NO hay waitMode
+
+                // Resetear listos
+                if (room.usersReady) room.usersReady.clear();
+                io.to(roomId).emit('users-ready-updated', { usersReady: [] });
+
                 io.to(roomId).emit('video-changed', {
                     currentVideoIndex: room.currentVideoIndex,
-                    isPlaying: true
+                    isPlaying: room.isPlaying
                 });
-                console.log(`⏭️ Siguiente video en sala ${roomId} (índice: ${room.currentVideoIndex})`);
+                console.log(`⏭️ Siguiente video en sala ${roomId} (índice: ${room.currentVideoIndex}, Playing: ${room.isPlaying})`);
             } else {
                 // Fin de playlist
                 room.isPlaying = false;
@@ -139,6 +194,11 @@ function setupSocket(server) {
             if (!room) return;
 
             room.currentVideoIndex = Math.max(0, room.currentVideoIndex - 1);
+
+            // Resetear listos
+            if (room.usersReady) room.usersReady.clear();
+            io.to(roomId).emit('users-ready-updated', { usersReady: [] });
+
             io.to(roomId).emit('video-changed', {
                 currentVideoIndex: room.currentVideoIndex
             });
@@ -151,23 +211,132 @@ function setupSocket(server) {
             if (!room || index < 0 || index >= room.playlist.length) return;
 
             room.currentVideoIndex = index;
-            room.isPlaying = true;
+            room.isPlaying = !room.waitMode; // Auto-play solo si NO hay waitMode
+
+            // Resetear listos
+            if (room.usersReady) room.usersReady.clear();
+            io.to(roomId).emit('users-ready-updated', { usersReady: [] });
+
             io.to(roomId).emit('video-changed', {
                 currentVideoIndex: room.currentVideoIndex,
-                isPlaying: true
+                isPlaying: room.isPlaying
             });
             console.log(`🎯 Ir a video ${index} en sala ${roomId}`);
         });
 
-        // ========== RANKING ==========
-        socket.on('rank-video', ({ roomId, videoId, userId, score }) => {
+        // ========== CONFIGURACIÓN SALA (NUEVO) ==========
+        socket.on('update-room-settings', ({ roomId, settings }) => {
             const room = activeRooms.get(roomId);
             if (!room) return;
 
+            // Solo Host autorizado (aunque idealmente verificaríamos ID)
+            // Actualizar settings
+            if (settings.waitMode !== undefined) {
+                room.waitMode = settings.waitMode;
+                // Si desactivamos waitMode, limpiar listos? O mantener?
+                // Mejor mantener para evitar bugs si se reactiva.
+            }
+            if (settings.roomName !== undefined) room.name = settings.roomName;
+
+            // Notificar a todos con estructura correcta
+            const roomToSend = {
+                ...room,
+                roomId: room.id,
+                roomName: room.name,
+                usersReady: room.usersReady ? Array.from(room.usersReady) : []
+            };
+            io.to(roomId).emit('room-settings-updated', { settings: roomToSend });
+            console.log(`⚙️ Configuración actualizada en sala ${roomId}:`, settings);
+        });
+
+        // ========== MODO ESPERA: Lógica de "Listo" ==========
+        socket.on('user-ready', ({ roomId, userId }) => {
+            const room = activeRooms.get(roomId);
+            if (!room) return;
+
+            if (!room.usersReady) room.usersReady = new Set();
+            room.usersReady.add(userId);
+
+            // Notificar progreso a todos
+            io.to(roomId).emit('users-ready-updated', {
+                usersReady: Array.from(room.usersReady)
+            });
+
+            // Auto-Start si todos están listos
+            if (room.waitMode && room.usersReady.size >= room.members.length) {
+                console.log(`🚀 Todos listos en sala ${roomId}. Auto-iniciando.`);
+                room.isPlaying = true;
+                io.to(roomId).emit('force-start-video');
+                io.to(roomId).emit('video-playing'); // Sincronizar estado play
+            }
+        });
+
+        socket.on('force-start', ({ roomId }) => {
+            const room = activeRooms.get(roomId);
+            if (!room) return;
+
+            console.log(`💪 Forzando inicio en sala ${roomId}`);
+            room.isPlaying = true;
+            io.to(roomId).emit('force-start-video');
+            io.to(roomId).emit('video-playing');
+        });
+
+        // ========== SEEK (SALTAR TIEMPO) ==========
+        socket.on('seek-video', ({ roomId, currentTime }) => {
+            const room = activeRooms.get(roomId);
+            if (!room) return;
+
+            // Retransmitir a todos EXCEPTO al remitente (para evitar loops)
+            socket.to(roomId).emit('video-seeked', { currentTime });
+            console.log(`⏩ Seek a ${currentTime}s en sala ${roomId}`);
+        });
+
+        // ========== HEARTBEAT (SYNC PERIÓDICO) ==========
+        socket.on('time-update', ({ roomId, currentTime }) => {
+            const room = activeRooms.get(roomId);
+            if (!room) return;
+
+            socket.to(roomId).emit('time-update', { currentTime });
+        });
+
+        // ========== SINCRONIZACIÓN DE TIEMPO (Nuevos usuarios) ==========
+        // 1. Cuando alguien entra, el servidor pide al HOST el tiempo actual
+        socket.on('request-time-sync', ({ roomId, requesterId }) => {
+            const room = activeRooms.get(roomId);
+            if (!room) return;
+
+            // Buscar al host
+            const host = room.members.find(m => m.isHost);
+            if (host) {
+                // Pedir al host que envíe su tiempo
+                io.to(host.socketId).emit('get-current-time', { requesterId });
+            }
+        });
+
+        // 3. El host responde y el servidor reenvía al usuario específico
+        socket.on('sync-time-response', ({ roomId, requesterId, currentTime }) => {
+            const room = activeRooms.get(roomId);
+            if (!room) return;
+
+            // Buscar socket del solicitante
+            const requester = room.members.find(m => m.id === requesterId);
+            if (requester) {
+                io.to(requester.socketId).emit('video-seeked', { currentTime });
+                console.log(`🕒 Sincronizando usuario ${requesterId} a ${currentTime}s`);
+            }
+        });
+
+        // ========== RANKING ==========
+        socket.on('rank-video', ({ roomId, videoId, userId, tier }) => {
+            const room = activeRooms.get(roomId);
+            if (!room) return;
+
+            console.log(`⭐ Ranking: Sala ${roomId}, Video ${videoId}, User ${userId}, Tier ${tier}`);
+
+            // Inicializar ranking para este video
             if (!room.rankings[videoId]) {
                 room.rankings[videoId] = {};
             }
-            room.rankings[videoId][userId] = score;
 
             // Notificar a todos
             io.to(roomId).emit('ranking-updated', {

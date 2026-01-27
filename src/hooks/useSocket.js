@@ -10,21 +10,12 @@ export const useSocket = () => {
     const { user } = useAuthStore();
 
     useEffect(() => {
-        // Conectar solo si hay usuario autenticado
-        if (!user) {
-            if (socketRef.current) {
-                socketRef.current.disconnect();
-                socketRef.current = null;
-            }
-            return;
-        }
-
-        // Crear conexión
+        // Crear conexión (tanto para usuarios autenticados como invitados)
         socketRef.current = io(SOCKET_URL, {
-            auth: {
+            auth: user ? {
                 userId: user.id,
                 username: user.displayName || user.username
-            }
+            } : {}
         });
 
         const socket = socketRef.current;
@@ -51,7 +42,8 @@ export const useSocket = () => {
                 roomMembers: room.members,
                 playlist: room.playlist,
                 currentVideoIndex: room.currentVideoIndex,
-                isPlaying: room.isPlaying
+                isPlaying: room.isPlaying,
+                waitMode: room.waitMode // Sync Wait Mode
             });
         });
 
@@ -64,7 +56,8 @@ export const useSocket = () => {
                 playlist: room.playlist,
                 currentVideoIndex: room.currentVideoIndex,
                 isPlaying: room.isPlaying,
-                rankings: room.rankings
+                rankings: room.rankings,
+                waitMode: room.waitMode // Sync Wait Mode
             });
         });
 
@@ -98,14 +91,14 @@ export const useSocket = () => {
             useStore.setState({ playlist });
         });
 
-        socket.on('video-playing', ({ isPlaying }) => {
+        socket.on('video-playing', (data) => {
             console.log('▶️ Video reproduciéndose');
-            useStore.setState({ isPlaying });
+            useStore.setState({ isPlaying: data?.isPlaying ?? true });
         });
 
-        socket.on('video-paused', ({ isPlaying }) => {
+        socket.on('video-paused', (data) => {
             console.log('⏸️ Video pausado');
-            useStore.setState({ isPlaying });
+            useStore.setState({ isPlaying: data?.isPlaying ?? false });
         });
 
         socket.on('video-changed', ({ currentVideoIndex, isPlaying }) => {
@@ -120,6 +113,41 @@ export const useSocket = () => {
             console.log('🏁 Playlist terminada');
             useStore.setState({ isPlaying: false });
             useStore.getState().calculateFinalRankings();
+        });
+
+        // ========== SINCRONIZACIÓN DE TIEMPO ==========
+        socket.on('video-seeked', ({ currentTime }) => {
+            console.log('⏩ Seek remoto recibido:', currentTime);
+            useStore.setState({ remoteSeekTime: currentTime });
+        });
+
+        socket.on('get-current-time', ({ requesterId }) => {
+            console.log('🕒 Solicitud de sincronización de tiempo de:', requesterId);
+            useStore.setState({ timeSyncRequest: { requesterId } });
+        });
+
+        socket.on('time-update', ({ currentTime }) => {
+            // No logueamos para no saturar consola
+            useStore.setState({ hostTime: currentTime });
+        });
+
+        // ========== WAIT MODE & SETTINGS ==========
+        socket.on('room-settings-updated', ({ settings }) => {
+            console.log('⚙️ Configuración recibida:', settings);
+            useStore.setState({
+                waitMode: settings.waitMode,
+                roomName: settings.name || settings.roomName
+            });
+        });
+
+        socket.on('users-ready-updated', ({ usersReady }) => {
+            console.log('✅ Usuarios listos:', usersReady);
+            useStore.setState({ usersReady });
+        });
+
+        socket.on('force-start-video', () => {
+            console.log('🚀 Inicio forzado recibido');
+            useStore.setState({ isPlaying: true });
         });
 
         // ========== EVENTOS DE RANKINGS ==========

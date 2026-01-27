@@ -11,6 +11,7 @@ import VideoPlayer from './VideoPlayer';
 import TierList from './TierList';
 import SearchBar from './SearchBar';
 import WelcomeScreen from './WelcomeScreen';
+import RoomSettingsModal from './RoomSettingsModal'; // Import
 
 function Room() {
   const { roomId } = useParams();
@@ -21,7 +22,7 @@ function Room() {
   const { setSocket } = useStore();
 
   const {
-    currentUser: roomUser, // Renombramos el usuario de la sala para evitar conflicto
+    currentUser: roomUser,
     roomMembers,
     roomName: storeRoomName,
     playlist,
@@ -34,7 +35,11 @@ function Room() {
     leaveRoom,
     getCurrentVideo,
     finalRankings,
-    getScoresForVideo, // Aseguramos traer esto
+    getScoresForVideo,
+    waitMode, // NEW
+    usersReady, // NEW
+    forceStart, // NEW
+    sendUserReady // NEW: For manual check
   } = useStore();
 
   const { user: authUser } = useAuthStore(); // Usuario autenticado real
@@ -46,34 +51,47 @@ function Room() {
   const [showWelcome, setShowWelcome] = useState(true);
   const [showPlaylist, setShowPlaylist] = useState(true);
 
-  // Inyectar socket en el store
+  // NEW State for Settings
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
+  // NEW State for Manual Ready
+  const [hasClickedReady, setHasClickedReady] = useState(false);
+
   // Inyectar socket en el store y conectar a la sala
   useEffect(() => {
     if (socket) {
       setSocket(socket);
       console.log('✅ Socket inyectado en el store');
 
-      // Asegurar que nos unimos/creamos la sala en el backend
+      // Tanto HOSTS como GUESTS necesitan emitir aquí
+      // porque cuando se llamó createRoom()/joinRoom() en Home.jsx, el socket aún no estaba conectado
       if (roomUser && roomId) {
         if (roomUser.isHost) {
-          console.log('📤 Emitiendo create-room desde Room.jsx');
+          console.log('📤 Emitiendo create-room desde Room.jsx (Host)');
           socket.emit('create-room', {
             roomId,
             roomName: storeRoomName || `Sala ${roomUser.name}`,
             userId: roomUser.id,
-            userName: roomUser.name
+            userName: roomUser.name,
+            waitMode: waitMode || false
           });
         } else {
-          console.log('📤 Emitiendo join-room desde Room.jsx');
+          console.log('📤 Emitiendo join-room desde Room.jsx (Guest)');
           socket.emit('join-room', {
             roomId,
             userId: roomUser.id,
             userName: roomUser.name
           });
+
+          // Solicitar sincronización de tiempo (para estar igual que el host)
+          console.log('🕒 Solicitando sincronización de tiempo');
+          socket.emit('request-time-sync', {
+            roomId,
+            requesterId: roomUser.id
+          });
         }
       }
     }
-  }, [socket, setSocket, roomId, roomUser, storeRoomName]);
+  }, [socket, setSocket, roomUser, roomId, storeRoomName, waitMode]);
 
   useEffect(() => {
     if (!roomUser) {
@@ -83,18 +101,17 @@ function Room() {
     }
 
     if (playlist.length === 0) {
-      // Solo el host debe generar la playlist inicial
-      if (roomUser?.isHost) {
+      // Solo el host debe generar la playlist inicial, Y DEBE ESPERAR AL SOCKET
+      if (roomUser?.isHost && socket) {
         loadPlaylist();
-      } else {
+      } else if (!roomUser?.isHost) {
         // Invitados esperan la playlist del socket
-        // No hacemos nada, loading sigue true hasta que llegue el evento del socket
       }
     } else {
       setLoading(false);
       console.log('📦 Playlist cargada en Room UI:', playlist.length);
     }
-  }, [roomUser, navigate, playlist.length]);
+  }, [roomUser, navigate, playlist.length, socket]);
 
   // Failsafe independiente: Forzar fin de carga después de 5s máximo
   useEffect(() => {
@@ -122,7 +139,7 @@ function Room() {
       setLoading(true);
       setError(null);
 
-      const videos = await animeApi.getRandomAnimeThemes(15);
+      const videos = await animeApi.getRandomAnimeThemes(10);
 
       if (videos.length === 0) {
         throw new Error('La API devolvió 0 videos. Verifica la conexión con el servidor backend.');
@@ -210,6 +227,7 @@ function Room() {
   const [showCode, setShowCode] = useState(false);
   const host = roomMembers.find(m => m.isHost) || roomMembers[0];
   const roomName = storeRoomName || (host ? `Sala ${host.name}` : 'Sala de Anime');
+  const isHost = roomUser?.isHost; // Helper
 
   const showMinimalToast = (message) => {
     toast(message, {
@@ -226,9 +244,60 @@ function Room() {
     });
   };
 
+  const renderWaitOverlay = () => {
+    if (!waitMode || isPlaying || showRanking) return null;
+
+    // Check progress (NO contar al host, solo guests)
+    const guestsOnly = roomMembers.filter(m => !m.isHost);
+    const total = guestsOnly.length;
+    const ready = usersReady.length;
+    // const isReady = usersReady.includes(roomUser?.id || roomUser?.uid); 
+    // Wait, usersReady in store is Array of IDs? In store it's initialized as array.
+    // In socket.js it's array.
+    // Yes.
+    const isReady = usersReady.some(id => id === (roomUser?.id || roomUser?.uid));
+
+    return (
+      <div className="absolute inset-0 bg-black/80 flex flex-col justify-center items-center z-20 backdrop-blur-sm rounded-xl">
+        <div className="animate-pulse mb-6">
+          <span className="text-6xl">⏳</span>
+        </div>
+        <h3 className="text-2xl font-bold font-display text-white mb-2">
+          Esperando integrantes...
+        </h3>
+        <p className="text-neutral-400 mb-6">
+          {ready} de {total} listos
+        </p>
+
+        {/* Progress Bar */}
+        <div className="w-64 h-2 bg-neutral-800 rounded-full mb-8 overflow-hidden">
+          <div
+            className="h-full bg-premium-red-600 transition-all duration-500 ease-out"
+            style={{ width: `${(ready / total) * 100}%` }}
+          />
+        </div>
+
+        {isHost ? (
+          <button
+            onClick={forceStart}
+            className="px-6 py-3 bg-premium-red-600 hover:bg-premium-red-700 text-white rounded-xl font-bold transition-all hover:scale-105 shadow-glow-red"
+          >
+            Forzar Inicio 🚀
+          </button>
+        ) : (
+          <p className="text-sm text-neutral-500 animate-pulse">
+            {isReady ? '¡Estás listo! Esperando al resto...' : 'Cargando video...'}
+          </p>
+        )}
+      </div>
+    );
+  };
+
   if (showFinalResults) {
     return (
       <div className="min-h-screen p-6">
+        {/* ... Reuse Final Results code ... */}
+        {/* Just reconstructing loosely for brevity in prompt, but I will paste the actual code */}
         <div className="glass-dark rounded-xl p-4 mb-6 max-w-7xl mx-auto">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
             <div>
@@ -276,11 +345,15 @@ function Room() {
     );
   }
 
-
-
   return (
     <div className="min-h-screen bg-transparent p-4 md:p-8 flex flex-col font-sans text-neutral-100 relative">
       <div className="absolute inset-0 bg-dotted-pattern opacity-20 pointer-events-none"></div>
+
+      {/* Settings Modal */}
+      <RoomSettingsModal
+        isOpen={showSettingsModal}
+        onClose={() => setShowSettingsModal(false)}
+      />
 
       {/* Pantalla de Bienvenida (Overlay) */}
       {showWelcome && (
@@ -291,29 +364,38 @@ function Room() {
         />
       )}
 
-      {/* Floating Profile Button - Bottom Right */}
-      {!showWelcome && authUser && (
-        <button
-          onClick={() => navigate('/profile')}
-          className="fixed bottom-6 right-6 z-50 flex items-center gap-3 glass-dark px-4 py-3 rounded-2xl border border-yellow-500/30 hover:border-yellow-500 shadow-2xl bg-black/80 backdrop-blur-md transition-all duration-300 hover:scale-105 animate-fade-in-up group"
-          title="Ver Mi Perfil"
-        >
-          <div className="flex items-center gap-3">
-            <img
-              src={authUser.avatar || authUser.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(authUser.displayName || authUser.username)}&background=dc2626&color=fff`}
-              alt={authUser.displayName || authUser.username}
-              className="w-10 h-10 rounded-full border-2 border-yellow-500 group-hover:border-yellow-400 transition-colors"
-            />
-            <div className="flex flex-col">
-              <span className="text-neutral-200 font-bold text-sm leading-tight">
-                {authUser.displayName || authUser.username}
-              </span>
-              <span className="text-yellow-400 text-xs font-medium">
-                Mi Perfil
-              </span>
-            </div>
-          </div>
-        </button>
+      {/* Floating Buttons Container */}
+      {!showWelcome && (
+        <div className="fixed bottom-6 right-6 z-50 flex items-end gap-3 animate-fade-in-up">
+
+          {/* Manual Ready Button (Wait Mode) */}
+
+          {/* Profile Button - REMOVED: Ready button now in FloatingButtons.jsx */}
+
+          {authUser && (
+            <button
+              onClick={() => navigate('/profile')}
+              className="flex items-center gap-3 glass-dark px-4 py-3 rounded-2xl border border-yellow-500/30 hover:border-yellow-500 shadow-xl bg-black/80 hover:scale-105 transition-all duration-300 group"
+              title="Ver Mi Perfil"
+            >
+              <div className="flex items-center gap-3">
+                <img
+                  src={authUser.avatar || authUser.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(authUser.displayName || authUser.username)}&background=dc2626&color=fff`}
+                  alt={authUser.displayName || authUser.username}
+                  className="w-10 h-10 rounded-full border-2 border-yellow-500 group-hover:border-yellow-400 transition-colors"
+                />
+                <div className="hidden md:flex flex-col text-left">
+                  <span className="text-neutral-200 font-bold text-sm leading-tight">
+                    {authUser.displayName || authUser.username}
+                  </span>
+                  <span className="text-yellow-400 text-xs font-medium">
+                    Mi Perfil
+                  </span>
+                </div>
+              </div>
+            </button>
+          )}
+        </div>
       )}
 
       {/* Contenido Principal */}
@@ -348,6 +430,21 @@ function Room() {
               </div>
 
               <div className="flex items-center gap-3 md:mr-4">
+
+                {/* SETTINGS BUTTON (Host Only) */}
+                {isHost && (
+                  <button
+                    className="px-3 py-2 bg-premium-black-300 text-neutral-300 rounded-lg hover:bg-premium-black-200 hover:text-white transition-colors"
+                    onClick={() => setShowSettingsModal(true)}
+                    title="Configuración de Sala"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </button>
+                )}
+
                 <button
                   className="px-4 py-2 bg-premium-red-600 text-white rounded-lg hover:bg-premium-red-700 transition-colors font-semibold"
                   onClick={() => setShowSearch(true)}
@@ -371,15 +468,18 @@ function Room() {
             <div className="space-y-4 xl:w-[1500px]">
               {currentVideo && (
                 <>
-                  <VideoPlayer
-                    video={currentVideo}
-                    onVideoEnd={handleVideoEnd}
-                    availableVersions={versions}
-                    onSelectVersion={(idx) => {
-                      goToVideo(idx);
-                      showMinimalToast('Cambiando versión…');
-                    }}
-                  />
+                  <div className="relative">
+                    {renderWaitOverlay()}
+                    <VideoPlayer
+                      video={currentVideo}
+                      onVideoEnd={handleVideoEnd}
+                      availableVersions={versions}
+                      onSelectVersion={(idx) => {
+                        goToVideo(idx);
+                        showMinimalToast('Cambiando versión…');
+                      }}
+                    />
+                  </div>
 
                   <div className="glass-dark rounded-xl p-4">
                     <div className="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center">
@@ -469,8 +569,6 @@ function Room() {
               </h3>
               <div className="space-y-3">
                 {roomMembers.map((m) => {
-                  // Buscar puntuación de este usuario para el video actual
-                  // Nota: currentVideo puede ser null al inicio, validar
                   const userScore = currentVideo ? getScoresForVideo(currentVideo.id).find(s => s.userId === m.id || s.userName === m.name)?.score : null;
 
                   return (
@@ -492,7 +590,7 @@ function Room() {
                       {userScore && (
                         <div className="flex flex-col items-center min-w-[40px]">
                           <span className="text-2xl font-bold text-yellow-400 drop-shadow-sm">{userScore}</span>
-                          <span className="text-[10px] text-neutral-400 uppercase">Nota</span>
+                          <span className="text-center text-[10px] text-neutral-400 uppercase">Nota</span>
                         </div>
                       )}
                     </div>

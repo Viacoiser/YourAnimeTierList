@@ -56,7 +56,8 @@ class AnimeThemesAPI {
         },
       });
 
-      return this.formatAnimeData(response.data.anime);
+      const formattedData = this.formatAnimeData(response.data.anime);
+      return formattedData.slice(0, limit); // Asegurar que no pasamos del límite solicitado
     } catch (error) {
       console.error('Error fetching anime themes:', error);
       throw error;

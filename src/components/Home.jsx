@@ -9,6 +9,7 @@ function Home() {
   const [roomCode, setRoomCode] = useState('');
   const [showJoinModal, setShowJoinModal] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [waitMode, setWaitMode] = useState(false); // NEW
 
   const navigate = useNavigate();
   const createRoom = useStore((state) => state.createRoom);
@@ -61,11 +62,11 @@ function Home() {
     if (user) {
       // Logueado: Input = Nombre Sala, User = Profile
       const profileName = user.displayName || user.email?.split('@')[0] || 'Anfitrión';
-      const roomId = createRoom(profileName, userName); // (user, roomName)
+      const roomId = createRoom(profileName, userName, waitMode); // (user, roomName, waitMode)
       navigate(`/room/${roomId}`);
     } else {
       // Invitado: Input = Nombre Usuario, Room = Auto
-      const roomId = createRoom(userName);
+      const roomId = createRoom(userName, null, waitMode); // (userName, roomName=null, waitMode)
       navigate(`/room/${roomId}`);
     }
   };
@@ -166,6 +167,23 @@ function Home() {
               autoFocus
               onKeyPress={(e) => e.key === 'Enter' && handleCreateRoom()}
             />
+
+            {/* Wait Mode Toggle */}
+            <div className="flex items-center justify-between mb-6 p-3 rounded-xl bg-black/20 border border-white/5">
+              <div className="text-left">
+                <span className="block text-white font-semibold">Modo Espera ⏳</span>
+                <span className="text-xs text-neutral-400">Permite esperar a los usuarios con menor velocidad de red</span>
+              </div>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  className="sr-only peer"
+                  checked={waitMode}
+                  onChange={(e) => setWaitMode(e.target.checked)}
+                />
+                <div className="w-11 h-6 bg-neutral-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-premium-red-600"></div>
+              </label>
+            </div>
 
             <div className="flex gap-3">
               <button

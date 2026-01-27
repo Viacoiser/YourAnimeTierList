@@ -1,0 +1,552 @@
+[2026-01-26T20:30:12.311Z] [INFO] 🚀 Servidor corriendo en el puerto 3003
+[2026-01-26T20:30:12.313Z] [INFO] 🔌 WebSocket habilitado
+[2026-01-26T20:30:12.354Z] [INFO] Conectado a la base de datos MySQL
+[2026-01-26T20:30:51.103Z] [INFO] ✅ Usuario conectado: KgdQxHPe2sMDNs60AAAC
+[2026-01-26T20:30:56.078Z] [INFO] 🏠 Sala creada: CDTXKP por Viaco
+[2026-01-26T20:30:56.085Z] [INFO] [PROXY API] Forwarding to: https://api.animethemes.moe/anime
+[2026-01-26T20:30:56.157Z] [INFO] 🏠 Sala creada: CDTXKP por Viaco
+[2026-01-26T20:30:59.089Z] [INFO] 📝 Playlist establecida en sala CDTXKP (42 videos)
+[2026-01-26T20:31:05.678Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/BakumanS3-OP2.webm
+[2026-01-26T20:31:12.289Z] [INFO] ✅ Usuario conectado: G9COzY2fqXkpyc5yAAAF
+[2026-01-26T20:31:17.288Z] [INFO] 👤 Viaco1 se unió a sala CDTXKP
+[2026-01-26T20:31:17.298Z] [INFO] 👤 Viaco1 se unió a sala CDTXKP
+[2026-01-26T20:31:17.308Z] [INFO] ⏱️ Sincronizando tiempo 9.667877s para usuario 7643ukrklvj
+[2026-01-26T20:31:17.338Z] [INFO] ⏱️ Sincronizando tiempo 9.700903s para usuario 7643ukrklvj
+[2026-01-26T20:31:23.870Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/BakumanS3-OP2.webm
+[2026-01-26T20:31:43.549Z] [INFO] ⏸️ Pause en sala CDTXKP
+[2026-01-26T20:31:50.723Z] [INFO] ▶️ Play en sala CDTXKP
+[2026-01-26T20:31:51.878Z] [INFO] ⏸️ Pause en sala CDTXKP
+[2026-01-26T20:31:52.698Z] [INFO] ▶️ Play en sala CDTXKP
+[2026-01-26T20:31:56.735Z] [INFO] ⏸️ Pause en sala CDTXKP
+[2026-01-26T20:31:57.497Z] [INFO] ▶️ Play en sala CDTXKP
+[2026-01-26T20:32:04.060Z] [INFO] ⏩ Seek a 2.3808950046355557s en sala CDTXKP
+[2026-01-26T20:32:23.139Z] [INFO] ⏩ Seek a 0.8579662076183189s en sala CDTXKP
+[2026-01-26T20:32:35.307Z] [INFO] ⏸️ Pause en sala CDTXKP
+[2026-01-26T20:32:51.867Z] [INFO] ▶️ Play en sala CDTXKP
+[2026-01-26T20:32:52.988Z] [INFO] ⏩ Seek a 48.30371296945419s en sala CDTXKP
+[2026-01-26T20:32:56.755Z] [INFO] ⏸️ Pause en sala CDTXKP
+[2026-01-26T21:04:48.042Z] [INFO] ❌ Usuario desconectado: KgdQxHPe2sMDNs60AAAC
+[2026-01-26T21:04:48.047Z] [INFO] 👑 Nuevo host en sala CDTXKP (por desconexión): Viaco1
+[2026-01-26T21:04:48.050Z] [INFO] ❌ Usuario desconectado: G9COzY2fqXkpyc5yAAAF
+[2026-01-26T21:04:48.050Z] [INFO] 🗑️ Sala CDTXKP eliminada (vacía por desconexión)
+[2026-01-26T21:18:20.906Z] [INFO] ✅ Usuario conectado: _LyHEtLGoQsCXcW4AAAM
+[2026-01-26T21:18:25.891Z] [INFO] 🏠 Sala creada: JDTQQH por Viaco
+[2026-01-26T21:18:25.897Z] [INFO] 🏠 Sala creada: JDTQQH por Viaco
+[2026-01-26T21:18:25.898Z] [INFO] [PROXY API] Forwarding to: https://api.animethemes.moe/anime
+[2026-01-26T21:18:30.261Z] [INFO] 📝 Playlist establecida en sala JDTQQH (39 videos)
+[2026-01-26T21:18:34.028Z] [INFO] ⏸️ Pause en sala JDTQQH
+[2026-01-26T21:18:36.818Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/BokuNoHeroAcademiaS2-OP2-NCBD1080.webm
+[2026-01-26T21:18:47.174Z] [INFO] ▶️ Play en sala JDTQQH
+[2026-01-26T21:18:51.204Z] [INFO] ⏸️ Pause en sala JDTQQH
+[2026-01-26T21:18:52.374Z] [INFO] ▶️ Play en sala JDTQQH
+[2026-01-26T21:18:58.119Z] [INFO] ⏸️ Pause en sala JDTQQH
+[2026-01-26T21:18:58.807Z] [INFO] ▶️ Play en sala JDTQQH
+[2026-01-26T21:19:11.171Z] [INFO] ⏸️ Pause en sala JDTQQH
+[2026-01-26T21:19:30.921Z] [INFO] ❌ Usuario desconectado: _LyHEtLGoQsCXcW4AAAM
+[2026-01-26T21:19:30.921Z] [INFO] 🗑️ Sala JDTQQH eliminada (vacía por desconexión)
+[2026-01-26T21:19:52.909Z] [INFO] ✅ Usuario conectado: scvl1Xv9H8iuXn97AAAR
+[2026-01-26T21:19:57.875Z] [INFO] 🏠 Sala creada: CN2N0E por Viaco
+[2026-01-26T21:19:57.881Z] [INFO] [PROXY API] Forwarding to: https://api.animethemes.moe/anime
+[2026-01-26T21:19:57.902Z] [INFO] 🏠 Sala creada: CN2N0E por Viaco
+[2026-01-26T21:20:00.796Z] [INFO] 📝 Playlist establecida en sala CN2N0E (55 videos)
+[2026-01-26T21:20:07.360Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/DarwinsGame-ED1-NCBD1080.webm
+[2026-01-26T21:20:23.662Z] [INFO] ⏩ Seek a 24.76014073049565s en sala CN2N0E
+[2026-01-26T21:20:32.163Z] [INFO] ⏩ Seek a 2.5933256388971926s en sala CN2N0E
+[2026-01-26T21:20:48.305Z] [INFO] ✅ Usuario conectado: qs_Gh_13EH0LsslqAAAU
+[2026-01-26T21:20:53.301Z] [INFO] 👤 Viaco1 se unió a sala CN2N0E
+[2026-01-26T21:20:53.310Z] [INFO] 👤 Viaco1 se unió a sala CN2N0E
+[2026-01-26T21:20:53.322Z] [INFO] ⏱️ Sincronizando tiempo 23.272601s para usuario e3125cd7ozo
+[2026-01-26T21:20:53.350Z] [INFO] ⏱️ Sincronizando tiempo 23.301812s para usuario e3125cd7ozo
+[2026-01-26T21:20:59.877Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/DarwinsGame-ED1-NCBD1080.webm
+[2026-01-26T21:21:07.246Z] [INFO] ⏸️ Pause en sala CN2N0E
+[2026-01-26T21:21:09.009Z] [INFO] ▶️ Play en sala CN2N0E
+[2026-01-26T21:21:13.468Z] [INFO] ⏩ Seek a 2.5933256388971926s en sala CN2N0E
+[2026-01-26T21:21:15.067Z] [INFO] ⏩ Seek a 0.4481499848715354s en sala CN2N0E
+[2026-01-26T21:21:38.824Z] [INFO] ▶️ Play en sala CN2N0E
+[2026-01-26T21:21:39.925Z] [INFO] ⏩ Seek a 0.4481499848715354s en sala CN2N0E
+[2026-01-26T21:21:43.889Z] [INFO] ⏸️ Pause en sala CN2N0E
+[2026-01-26T21:21:44.658Z] [INFO] ▶️ Play en sala CN2N0E
+[2026-01-26T21:21:45.221Z] [INFO] ⏸️ Pause en sala CN2N0E
+[2026-01-26T21:23:16.164Z] [INFO] ❌ Usuario desconectado: scvl1Xv9H8iuXn97AAAR
+[2026-01-26T21:23:16.167Z] [INFO] 👑 Nuevo host en sala CN2N0E (por desconexión): Viaco1
+[2026-01-26T21:23:17.044Z] [INFO] ❌ Usuario desconectado: qs_Gh_13EH0LsslqAAAU
+[2026-01-26T21:23:17.044Z] [INFO] 🗑️ Sala CN2N0E eliminada (vacía por desconexión)
+[2026-01-26T21:23:48.448Z] [INFO] ✅ Usuario conectado: MvTclnikAFJmsSF1AAAb
+[2026-01-26T21:23:50.768Z] [INFO] ❌ Usuario desconectado: MvTclnikAFJmsSF1AAAb
+[2026-01-26T21:23:53.363Z] [INFO] ✅ Usuario conectado: V5z-KDUdFM7oZOOoAAAg
+[2026-01-26T21:23:58.331Z] [INFO] 🏠 Sala creada: H3LXNI por Viaco
+[2026-01-26T21:23:58.338Z] [INFO] [PROXY API] Forwarding to: https://api.animethemes.moe/anime
+[2026-01-26T21:23:58.347Z] [INFO] 🏠 Sala creada: H3LXNI por Viaco
+[2026-01-26T21:24:00.714Z] [INFO] 📝 Playlist establecida en sala H3LXNI (102 videos)
+[2026-01-26T21:24:07.292Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/BokuBen-ED1-NCBD1080.webm
+[2026-01-26T21:24:13.382Z] [INFO] 🎯 Ir a video 13 en sala H3LXNI
+[2026-01-26T21:24:16.397Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/BoogiepopWaWarawanai-ED1-NCBD1080.webm
+[2026-01-26T21:24:19.341Z] [INFO] ✅ Usuario conectado: VldxlmKvR_F1cBljAAAj
+[2026-01-26T21:24:24.340Z] [INFO] 👤 Viaco1 se unió a sala H3LXNI
+[2026-01-26T21:24:24.350Z] [INFO] 👤 Viaco1 se unió a sala H3LXNI
+[2026-01-26T21:24:24.378Z] [INFO] ⏱️ Sincronizando tiempo 8.751109s para usuario 2sa3cdi314k
+[2026-01-26T21:24:24.408Z] [INFO] ⏱️ Sincronizando tiempo 8.773938s para usuario 2sa3cdi314k
+[2026-01-26T21:24:30.913Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/BoogiepopWaWarawanai-ED1-NCBD1080.webm
+[2026-01-26T21:24:50.681Z] [INFO] ⏸️ Pause en sala H3LXNI
+[2026-01-26T21:24:52.116Z] [INFO] ⏩ Seek a 0.8247260727415385s en sala H3LXNI
+[2026-01-26T21:24:57.108Z] [INFO] ▶️ Play en sala H3LXNI
+[2026-01-26T21:24:58.835Z] [INFO] ⏩ Seek a 0.09276304513254538s en sala H3LXNI
+[2026-01-26T21:24:59.106Z] [INFO] ⏩ Seek a 0.09276304513254538s en sala H3LXNI
+[2026-01-26T21:24:59.269Z] [INFO] ⏩ Seek a 0.09276304513254538s en sala H3LXNI
+[2026-01-26T21:25:00.227Z] [INFO] ⏩ Seek a 0.8247260727415385s en sala H3LXNI
+[2026-01-26T21:25:00.392Z] [INFO] ⏩ Seek a 0.09276304513254538s en sala H3LXNI
+[2026-01-26T21:25:03.595Z] [INFO] ⏸️ Pause en sala H3LXNI
+[2026-01-26T21:25:04.869Z] [INFO] ▶️ Play en sala H3LXNI
+[2026-01-26T21:25:07.758Z] [INFO] ⏩ Seek a -0.27321846867195126s en sala H3LXNI
+[2026-01-26T21:25:12.555Z] [INFO] ⏩ Seek a 2.6546336417640215s en sala H3LXNI
+[2026-01-26T21:25:16.722Z] [INFO] ⏸️ Pause en sala H3LXNI
+[2026-01-26T21:26:52.039Z] [INFO] ❌ Usuario desconectado: V5z-KDUdFM7oZOOoAAAg
+[2026-01-26T21:26:52.040Z] [INFO] 👑 Nuevo host en sala H3LXNI (por desconexión): Viaco1
+[2026-01-26T21:26:52.043Z] [INFO] ❌ Usuario desconectado: VldxlmKvR_F1cBljAAAj
+[2026-01-26T21:26:52.043Z] [INFO] 🗑️ Sala H3LXNI eliminada (vacía por desconexión)
+[2026-01-26T21:28:09.482Z] [INFO] ✅ Usuario conectado: UB3AChGJ_mpJ7Tx3AAAq
+[2026-01-26T21:28:14.476Z] [INFO] 🏠 Sala creada: 1EKM8L por Viaco
+[2026-01-26T21:28:14.483Z] [INFO] [PROXY API] Forwarding to: https://api.animethemes.moe/anime
+[2026-01-26T21:28:14.508Z] [INFO] 🏠 Sala creada: 1EKM8L por Viaco
+[2026-01-26T21:28:17.466Z] [INFO] 📝 Playlist establecida en sala 1EKM8L (57 videos)
+[2026-01-26T21:28:24.034Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/AlpsNoShoujoHeidi-ED1.webm
+[2026-01-26T21:28:29.888Z] [INFO] ⏩ Seek a 23.663636119982367s en sala 1EKM8L
+[2026-01-26T21:28:42.248Z] [INFO] ✅ Usuario conectado: EllfL9J9OMyvkWvQAAAt
+[2026-01-26T21:28:47.251Z] [INFO] 👤 Viaco1 se unió a sala 1EKM8L
+[2026-01-26T21:28:47.259Z] [INFO] 👤 Viaco1 se unió a sala 1EKM8L
+[2026-01-26T21:28:47.277Z] [INFO] ⏱️ Sincronizando tiempo 34.065813s para usuario xixjl5zhjr
+[2026-01-26T21:28:47.312Z] [INFO] ⏱️ Sincronizando tiempo 34.10445s para usuario xixjl5zhjr
+[2026-01-26T21:28:53.824Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/AlpsNoShoujoHeidi-ED1.webm
+[2026-01-26T21:29:20.750Z] [INFO] ⏩ Seek a 0.6993144108478669s en sala 1EKM8L
+[2026-01-26T21:29:28.961Z] [INFO] ⏸️ Pause en sala 1EKM8L
+[2026-01-26T21:29:31.009Z] [INFO] ▶️ Play en sala 1EKM8L
+[2026-01-26T21:29:32.596Z] [INFO] ⏸️ Pause en sala 1EKM8L
+[2026-01-26T21:29:33.779Z] [INFO] ▶️ Play en sala 1EKM8L
+[2026-01-26T21:29:35.565Z] [INFO] ⏸️ Pause en sala 1EKM8L
+[2026-01-26T21:29:36.416Z] [INFO] ▶️ Play en sala 1EKM8L
+[2026-01-26T21:29:41.873Z] [INFO] ⏸️ Pause en sala 1EKM8L
+[2026-01-26T21:29:43.568Z] [INFO] ▶️ Play en sala 1EKM8L
+[2026-01-26T21:29:49.771Z] [INFO] ⏸️ Pause en sala 1EKM8L
+[2026-01-26T21:29:50.476Z] [INFO] ▶️ Play en sala 1EKM8L
+[2026-01-26T21:29:53.763Z] [INFO] ⏸️ Pause en sala 1EKM8L
+[2026-01-26T21:30:12.314Z] [INFO] Auto-limpieza: 0 mensajes eliminados
+[2026-01-26T21:30:29.287Z] [INFO] ▶️ Play en sala 1EKM8L
+[2026-01-26T21:30:30.090Z] [INFO] ⏸️ Pause en sala 1EKM8L
+[2026-01-26T21:31:24.038Z] [INFO] ❌ Usuario desconectado: UB3AChGJ_mpJ7Tx3AAAq
+[2026-01-26T21:31:24.039Z] [INFO] 👑 Nuevo host en sala 1EKM8L (por desconexión): Viaco1
+[2026-01-26T21:31:24.048Z] [INFO] ❌ Usuario desconectado: EllfL9J9OMyvkWvQAAAt
+[2026-01-26T21:31:24.048Z] [INFO] 🗑️ Sala 1EKM8L eliminada (vacía por desconexión)
+[2026-01-26T21:33:24.600Z] [INFO] ✅ Usuario conectado: zSH3HkzB9M_dfttEAAA0
+[2026-01-26T21:33:29.587Z] [INFO] 🏠 Sala creada: Q6BLGG por Viaco
+[2026-01-26T21:33:29.594Z] [INFO] [PROXY API] Forwarding to: https://api.animethemes.moe/anime
+[2026-01-26T21:33:29.602Z] [INFO] 🏠 Sala creada: Q6BLGG por Viaco
+[2026-01-26T21:33:32.527Z] [INFO] 📝 Playlist establecida en sala Q6BLGG (45 videos)
+[2026-01-26T21:33:39.094Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/CrossGame-ED1.webm
+[2026-01-26T21:33:52.340Z] [INFO] ✅ Usuario conectado: 3WrfPlBJlPDFY5gXAAA3
+[2026-01-26T21:33:57.334Z] [INFO] 👤 Viaco1 se unió a sala Q6BLGG
+[2026-01-26T21:33:57.342Z] [INFO] 👤 Viaco1 se unió a sala Q6BLGG
+[2026-01-26T21:33:57.351Z] [INFO] ⏱️ Sincronizando tiempo 17.713257s para usuario yorvktyt5o
+[2026-01-26T21:33:57.388Z] [INFO] ⏱️ Sincronizando tiempo 17.74294s para usuario yorvktyt5o
+[2026-01-26T21:34:02.571Z] [INFO] ⏸️ Pause en sala Q6BLGG
+[2026-01-26T21:34:03.897Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/CrossGame-ED1.webm
+[2026-01-26T21:34:12.488Z] [INFO] ▶️ Play en sala Q6BLGG
+[2026-01-26T21:34:51.572Z] [INFO] ❌ Usuario desconectado: zSH3HkzB9M_dfttEAAA0
+[2026-01-26T21:34:51.574Z] [INFO] 👑 Nuevo host en sala Q6BLGG (por desconexión): Viaco1
+[2026-01-26T21:34:51.577Z] [INFO] ❌ Usuario desconectado: 3WrfPlBJlPDFY5gXAAA3
+[2026-01-26T21:34:51.578Z] [INFO] 🗑️ Sala Q6BLGG eliminada (vacía por desconexión)
+[2026-01-26T21:35:47.001Z] [INFO] ✅ Usuario conectado: Dhpg1fUF05x33BA6AAA-
+[2026-01-26T21:35:51.987Z] [INFO] 🏠 Sala creada: RRVDXY por Viaco
+[2026-01-26T21:35:51.993Z] [INFO] [PROXY API] Forwarding to: https://api.animethemes.moe/anime
+[2026-01-26T21:35:52.015Z] [INFO] 🏠 Sala creada: RRVDXY por Viaco
+[2026-01-26T21:35:54.615Z] [INFO] 📝 Playlist establecida en sala RRVDXY (100 videos)
+[2026-01-26T21:36:01.202Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/EvangelionYouCanNotAdvance-ED1.webm
+[2026-01-26T21:36:03.619Z] [INFO] ✅ Usuario conectado: 6NiRCPMz6YJ9M8daAABB
+[2026-01-26T21:36:08.612Z] [INFO] 👤 Viaco1 se unió a sala RRVDXY
+[2026-01-26T21:36:08.623Z] [INFO] 👤 Viaco1 se unió a sala RRVDXY
+[2026-01-26T21:36:08.654Z] [INFO] ⏱️ Sincronizando tiempo 8.20325s para usuario eg81sr3zhcu
+[2026-01-26T21:36:08.682Z] [INFO] ⏱️ Sincronizando tiempo 8.232262s para usuario eg81sr3zhcu
+[2026-01-26T21:36:15.190Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/EvangelionYouCanNotAdvance-ED1.webm
+[2026-01-26T21:36:47.530Z] [INFO] ⏩ Seek a 2.6914300803597357s en sala RRVDXY
+[2026-01-26T21:36:58.021Z] [INFO] ⏩ Seek a -9.252095020461324s en sala RRVDXY
+[2026-01-26T21:37:33.803Z] [INFO] ⏸️ Pause en sala RRVDXY
+[2026-01-26T21:37:38.354Z] [INFO] ▶️ Play en sala RRVDXY
+[2026-01-26T21:37:39.986Z] [INFO] ⏸️ Pause en sala RRVDXY
+[2026-01-26T21:37:41.561Z] [INFO] ▶️ Play en sala RRVDXY
+[2026-01-26T21:37:42.859Z] [INFO] ⏸️ Pause en sala RRVDXY
+[2026-01-26T21:37:44.208Z] [INFO] ▶️ Play en sala RRVDXY
+[2026-01-26T21:37:54.288Z] [INFO] ⏸️ Pause en sala RRVDXY
+[2026-01-26T21:37:56.344Z] [INFO] ▶️ Play en sala RRVDXY
+[2026-01-26T21:38:01.765Z] [INFO] ⏸️ Pause en sala RRVDXY
+[2026-01-26T21:38:02.691Z] [INFO] ▶️ Play en sala RRVDXY
+[2026-01-26T21:38:03.908Z] [INFO] ⏩ Seek a 12.246250161016585s en sala RRVDXY
+[2026-01-26T21:38:17.702Z] [INFO] ⏸️ Pause en sala RRVDXY
+[2026-01-26T21:38:18.771Z] [INFO] ▶️ Play en sala RRVDXY
+[2026-01-26T21:38:19.533Z] [INFO] ⏩ Seek a 105.40574594742085s en sala RRVDXY
+[2026-01-26T21:38:44.945Z] [INFO] ⏸️ Pause en sala RRVDXY
+[2026-01-26T21:38:50.531Z] [INFO] ▶️ Play en sala RRVDXY
+[2026-01-26T21:38:56.915Z] [INFO] ⏩ Seek a 7.46884012068816s en sala RRVDXY
+[2026-01-26T21:39:00.474Z] [INFO] ▶️ Play en sala RRVDXY
+[2026-01-26T21:39:05.228Z] [INFO] ⏸️ Pause en sala RRVDXY
+[2026-01-26T21:39:05.875Z] [INFO] ▶️ Play en sala RRVDXY
+[2026-01-26T21:39:08.070Z] [INFO] ⏩ Seek a 2.6914300803597357s en sala RRVDXY
+[2026-01-26T21:39:08.229Z] [INFO] ⏩ Seek a 2.6914300803597357s en sala RRVDXY
+[2026-01-26T21:39:08.366Z] [INFO] ⏩ Seek a 2.6914300803597357s en sala RRVDXY
+[2026-01-26T21:39:08.929Z] [INFO] ⏩ Seek a 28.96718530216607s en sala RRVDXY
+[2026-01-26T21:39:12.995Z] [INFO] 🎯 Ir a video 1 en sala RRVDXY
+[2026-01-26T21:39:16.009Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/EvangelionYouCanNotRedo-ED1.webm
+[2026-01-26T21:39:16.024Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/EvangelionYouCanNotRedo-ED1.webm
+[2026-01-26T21:39:16.752Z] [ERROR] Video Proxy Error: Request failed with status code 503
+[2026-01-26T21:39:16.753Z] [ERROR] Video Proxy Error: Request failed with status code 503
+[2026-01-26T21:40:03.630Z] [INFO] ⏸️ Pause en sala RRVDXY
+[2026-01-26T21:40:04.566Z] [INFO] ▶️ Play en sala RRVDXY
+[2026-01-26T21:40:09.901Z] [INFO] ⏸️ Pause en sala RRVDXY
+[2026-01-26T21:41:32.916Z] [INFO] ❌ Usuario desconectado: Dhpg1fUF05x33BA6AAA-
+[2026-01-26T21:41:32.917Z] [INFO] 👑 Nuevo host en sala RRVDXY (por desconexión): Viaco1
+[2026-01-26T21:41:33.105Z] [INFO] ❌ Usuario desconectado: 6NiRCPMz6YJ9M8daAABB
+[2026-01-26T21:41:33.106Z] [INFO] 🗑️ Sala RRVDXY eliminada (vacía por desconexión)
+[2026-01-26T21:44:07.532Z] [INFO] ✅ Usuario conectado: QBHomHWB4WJvOHyAAABI
+[2026-01-26T21:44:12.513Z] [INFO] 🏠 Sala creada: YPXOOW por Viaco
+[2026-01-26T21:44:12.519Z] [INFO] [PROXY API] Forwarding to: https://api.animethemes.moe/anime
+[2026-01-26T21:44:12.525Z] [INFO] 🏠 Sala creada: YPXOOW por Viaco
+[2026-01-26T21:44:14.049Z] [INFO] 📝 Playlist establecida en sala YPXOOW (70 videos)
+[2026-01-26T21:44:20.624Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/AkibasTrip-OP1-NCBD1080.webm
+[2026-01-26T21:44:32.000Z] [INFO] ✅ Usuario conectado: xNFUtsYDx8wc0iOFAABL
+[2026-01-26T21:44:36.992Z] [INFO] 👤 Viaco1 se unió a sala YPXOOW
+[2026-01-26T21:44:37.002Z] [INFO] 👤 Viaco1 se unió a sala YPXOOW
+[2026-01-26T21:44:37.027Z] [INFO] ⏱️ Sincronizando tiempo 17.461813s para usuario n7yev829pm
+[2026-01-26T21:44:37.072Z] [INFO] ⏱️ Sincronizando tiempo 17.510657s para usuario n7yev829pm
+[2026-01-26T21:44:43.567Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/AkibasTrip-OP1-NCBD1080.webm
+[2026-01-26T21:45:01.979Z] [INFO] 🎯 Ir a video 1 en sala YPXOOW
+[2026-01-26T21:45:04.992Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/AkibasTrip-ED1.webm
+[2026-01-26T21:45:05.010Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/AkibasTrip-ED1.webm
+[2026-01-26T21:45:12.215Z] [INFO] ⏸️ Pause en sala YPXOOW
+[2026-01-26T21:45:36.358Z] [INFO] ▶️ Play en sala YPXOOW
+[2026-01-26T21:45:40.218Z] [INFO] ⏸️ Pause en sala YPXOOW
+[2026-01-26T21:45:40.663Z] [INFO] ▶️ Play en sala YPXOOW
+[2026-01-26T21:45:46.451Z] [INFO] ⏩ Seek a 14.732983348684126s en sala YPXOOW
+[2026-01-26T21:45:53.924Z] [INFO] ⏩ Seek a 0.8247798014078264s en sala YPXOOW
+[2026-01-26T21:45:56.024Z] [INFO] ▶️ Play en sala YPXOOW
+[2026-01-26T21:46:04.231Z] [INFO] 🎯 Ir a video 2 en sala YPXOOW
+[2026-01-26T21:46:07.244Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/AkibasTrip-ED2.webm
+[2026-01-26T21:46:07.264Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/AkibasTrip-ED2.webm
+[2026-01-26T21:46:08.769Z] [ERROR] Video Proxy Error: Request failed with status code 503
+[2026-01-26T21:46:08.770Z] [ERROR] Video Proxy Error: Request failed with status code 503
+[2026-01-26T21:46:10.376Z] [INFO] 🎯 Ir a video 5 en sala YPXOOW
+[2026-01-26T21:46:13.399Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/AkibasTrip-ED4.webm
+[2026-01-26T21:46:13.402Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/AkibasTrip-ED4.webm
+[2026-01-26T21:46:14.128Z] [ERROR] Video Proxy Error: Request failed with status code 503
+[2026-01-26T21:46:23.171Z] [INFO] ⏸️ Pause en sala YPXOOW
+[2026-01-26T21:46:23.587Z] [INFO] ▶️ Play en sala YPXOOW
+[2026-01-26T21:46:37.389Z] [INFO] ⏸️ Pause en sala YPXOOW
+[2026-01-26T21:47:33.682Z] [INFO] ❌ Usuario desconectado: QBHomHWB4WJvOHyAAABI
+[2026-01-26T21:47:33.690Z] [INFO] 👑 Nuevo host en sala YPXOOW (por desconexión): Viaco1
+[2026-01-26T21:47:34.054Z] [INFO] ❌ Usuario desconectado: xNFUtsYDx8wc0iOFAABL
+[2026-01-26T21:47:34.055Z] [INFO] 🗑️ Sala YPXOOW eliminada (vacía por desconexión)
+[2026-01-26T21:47:56.265Z] [INFO] ✅ Usuario conectado: 9zpaZ9PWxF6NlPrVAABS
+[2026-01-26T21:48:01.250Z] [INFO] 🏠 Sala creada: 3XVQ70 por Viaco
+[2026-01-26T21:48:01.257Z] [INFO] [PROXY API] Forwarding to: https://api.animethemes.moe/anime
+[2026-01-26T21:48:01.266Z] [INFO] 🏠 Sala creada: 3XVQ70 por Viaco
+[2026-01-26T21:48:03.473Z] [INFO] 📝 Playlist establecida en sala 3XVQ70 (54 videos)
+[2026-01-26T21:48:10.043Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/ActionHeroineCheerFruits-OP2-NCBD1080.webm
+[2026-01-26T21:48:11.271Z] [INFO] ⏸️ Pause en sala 3XVQ70
+[2026-01-26T21:48:14.872Z] [INFO] ✅ Usuario conectado: forJ7a0Y_uFjOaJAAABV
+[2026-01-26T21:48:18.443Z] [INFO] ⏩ Seek a -0.2702489284256877s en sala 3XVQ70
+[2026-01-26T21:48:18.908Z] [INFO] ⏩ Seek a -3.5282827344502725s en sala 3XVQ70
+[2026-01-26T21:48:19.872Z] [INFO] 👤 Viaco1 se unió a sala 3XVQ70
+[2026-01-26T21:48:19.878Z] [INFO] 👤 Viaco1 se unió a sala 3XVQ70
+[2026-01-26T21:48:19.892Z] [INFO] ⏱️ Sincronizando tiempo 0s para usuario 473gqw62s2f
+[2026-01-26T21:48:19.917Z] [INFO] ⏱️ Sincronizando tiempo 0s para usuario 473gqw62s2f
+[2026-01-26T21:48:26.478Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/ActionHeroineCheerFruits-OP2-NCBD1080.webm
+[2026-01-26T21:48:27.708Z] [INFO] ▶️ Play en sala 3XVQ70
+[2026-01-26T21:48:28.464Z] [INFO] ⏸️ Pause en sala 3XVQ70
+[2026-01-26T21:49:25.383Z] [INFO] ▶️ Play en sala 3XVQ70
+[2026-01-26T21:49:30.190Z] [INFO] ⏸️ Pause en sala 3XVQ70
+[2026-01-26T21:49:30.625Z] [INFO] ▶️ Play en sala 3XVQ70
+[2026-01-26T21:49:57.819Z] [INFO] ⏸️ Pause en sala 3XVQ70
+[2026-01-26T21:49:58.644Z] [INFO] ▶️ Play en sala 3XVQ70
+[2026-01-26T21:49:58.819Z] [INFO] ❌ Usuario desconectado: forJ7a0Y_uFjOaJAAABV
+[2026-01-26T21:49:58.824Z] [INFO] ❌ Usuario desconectado: 9zpaZ9PWxF6NlPrVAABS
+[2026-01-26T21:49:58.827Z] [INFO] 🗑️ Sala 3XVQ70 eliminada (vacía por desconexión)
+[2026-01-26T21:50:31.471Z] [INFO] ✅ Usuario conectado: _AQSbVUovyrrBSWEAABc
+[2026-01-26T21:50:36.445Z] [INFO] 🏠 Sala creada: TCZRDR por Viaco
+[2026-01-26T21:50:36.451Z] [INFO] [PROXY API] Forwarding to: https://api.animethemes.moe/anime
+[2026-01-26T21:50:36.458Z] [INFO] 🏠 Sala creada: TCZRDR por Viaco
+[2026-01-26T21:50:38.232Z] [INFO] 📝 Playlist establecida en sala TCZRDR (38 videos)
+[2026-01-26T21:50:44.797Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/DotHackLiminality-OP2.webm
+[2026-01-26T21:51:34.070Z] [INFO] ❌ Usuario desconectado: _AQSbVUovyrrBSWEAABc
+[2026-01-26T21:51:34.071Z] [INFO] 🗑️ Sala TCZRDR eliminada (vacía por desconexión)
+[2026-01-26T21:52:26.480Z] [INFO] ✅ Usuario conectado: l6ZLiX8XwSO1Pt-jAABh
+[2026-01-26T21:52:31.461Z] [INFO] 🏠 Sala creada: KUGH82 por Viaco
+[2026-01-26T21:52:31.468Z] [INFO] [PROXY API] Forwarding to: https://api.animethemes.moe/anime
+[2026-01-26T21:52:31.474Z] [INFO] 🏠 Sala creada: KUGH82 por Viaco
+[2026-01-26T21:52:33.093Z] [INFO] 📝 Playlist establecida en sala KUGH82 (10 videos)
+[2026-01-26T21:52:39.629Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/Bartender-ED1.webm
+[2026-01-26T21:52:43.482Z] [INFO] ✅ Usuario conectado: Yppai4NOHQGHOcqBAABk
+[2026-01-26T21:52:48.475Z] [INFO] 👤 Viaco1 se unió a sala KUGH82
+[2026-01-26T21:52:48.483Z] [INFO] 👤 Viaco1 se unió a sala KUGH82
+[2026-01-26T21:52:48.490Z] [INFO] ⏱️ Sincronizando tiempo 0s para usuario wlppjdyjfk
+[2026-01-26T21:52:48.505Z] [INFO] ⏱️ Sincronizando tiempo 0s para usuario wlppjdyjfk
+[2026-01-26T21:52:55.039Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/Bartender-ED1.webm
+[2026-01-26T21:52:55.772Z] [ERROR] Video Proxy Error: Request failed with status code 503
+[2026-01-26T21:53:23.640Z] [INFO] ▶️ Play en sala KUGH82
+[2026-01-26T21:53:25.966Z] [INFO] ⏸️ Pause en sala KUGH82
+[2026-01-26T21:58:23.565Z] [INFO] ▶️ Play en sala KUGH82
+[2026-01-26T21:58:25.522Z] [INFO] ⏸️ Pause en sala KUGH82
+[2026-01-26T21:58:26.230Z] [INFO] ▶️ Play en sala KUGH82
+[2026-01-26T21:58:28.142Z] [INFO] ⏩ Seek a 0s en sala KUGH82
+[2026-01-26T21:58:38.240Z] [INFO] ⏩ Seek a 21.977335601491383s en sala KUGH82
+[2026-01-26T21:58:42.614Z] [INFO] ⏸️ Pause en sala KUGH82
+[2026-01-26T21:58:44.253Z] [INFO] ▶️ Play en sala KUGH82
+[2026-01-26T21:58:50.992Z] [INFO] ⏸️ Pause en sala KUGH82
+[2026-01-26T21:58:51.911Z] [INFO] ▶️ Play en sala KUGH82
+[2026-01-26T21:58:53.285Z] [INFO] ⏸️ Pause en sala KUGH82
+[2026-01-26T21:58:54.948Z] [INFO] 🎯 Ir a video 2 en sala KUGH82
+[2026-01-26T21:58:57.967Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/Basilisk-ED1.webm
+[2026-01-26T21:58:57.970Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/Basilisk-ED1.webm
+[2026-01-26T21:59:01.964Z] [INFO] ⏸️ Pause en sala KUGH82
+[2026-01-26T21:59:19.642Z] [INFO] ▶️ Play en sala KUGH82
+[2026-01-26T21:59:23.567Z] [INFO] 👑 Nuevo host en sala KUGH82: Viaco1
+[2026-01-26T21:59:23.567Z] [INFO] 👋 Usuario tbufpxn9ceb salió de sala KUGH82
+[2026-01-26T21:59:23.575Z] [INFO] ❌ Usuario desconectado: l6ZLiX8XwSO1Pt-jAABh
+[2026-01-26T21:59:29.201Z] [INFO] ✅ Usuario conectado: G4xu8vS9_cFtxCf0AABn
+[2026-01-26T21:59:34.185Z] [INFO] 🏠 Sala creada: RIGWMS por Viaco
+[2026-01-26T21:59:34.191Z] [INFO] 🏠 Sala creada: RIGWMS por Viaco
+[2026-01-26T21:59:34.192Z] [INFO] [PROXY API] Forwarding to: https://api.animethemes.moe/anime
+[2026-01-26T21:59:35.080Z] [INFO] ⏩ Seek a 18.020585296046747s en sala KUGH82
+[2026-01-26T21:59:36.034Z] [INFO] ⏩ Seek a 22.586092898455664s en sala KUGH82
+[2026-01-26T21:59:37.769Z] [INFO] 📝 Playlist establecida en sala RIGWMS (10 videos)
+[2026-01-26T21:59:41.717Z] [INFO] ⏸️ Pause en sala KUGH82
+[2026-01-26T21:59:44.312Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/AliceOrAlice-ED1-NCBD1080.webm
+[2026-01-26T21:59:45.038Z] [ERROR] Video Proxy Error: Request failed with status code 503
+[2026-01-26T22:00:09.574Z] [INFO] ▶️ Play en sala RIGWMS
+[2026-01-26T22:00:15.060Z] [INFO] ⏸️ Pause en sala RIGWMS
+[2026-01-26T22:00:16.615Z] [INFO] 🎯 Ir a video 5 en sala RIGWMS
+[2026-01-26T22:00:19.635Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/Alien9-OP2.webm
+[2026-01-26T22:00:36.990Z] [INFO] ❌ Usuario desconectado: G4xu8vS9_cFtxCf0AABn
+[2026-01-26T22:00:36.991Z] [INFO] 🗑️ Sala RIGWMS eliminada (vacía por desconexión)
+[2026-01-26T22:00:37.177Z] [INFO] ❌ Usuario desconectado: Yppai4NOHQGHOcqBAABk
+[2026-01-26T22:00:37.180Z] [INFO] 🗑️ Sala KUGH82 eliminada (vacía por desconexión)
+[2026-01-26T22:01:05.723Z] [INFO] ✅ Usuario conectado: o8ZgrR7kCogIONHhAABu
+[2026-01-26T22:01:10.702Z] [INFO] 🏠 Sala creada: PNHUFF por Viaco
+[2026-01-26T22:01:10.708Z] [INFO] [PROXY API] Forwarding to: https://api.animethemes.moe/anime
+[2026-01-26T22:01:10.714Z] [INFO] 🏠 Sala creada: PNHUFF por Viaco
+[2026-01-26T22:01:13.654Z] [INFO] 📝 Playlist establecida en sala PNHUFF (10 videos)
+[2026-01-26T22:01:20.178Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/BoogiepopPhantom-ED1.webm
+[2026-01-26T22:01:45.118Z] [INFO] ✅ Usuario conectado: 7o6Ev_bXPF8A0-YtAABx
+[2026-01-26T22:01:50.113Z] [INFO] 👤 Viaco1 se unió a sala PNHUFF
+[2026-01-26T22:01:50.121Z] [INFO] 👤 Viaco1 se unió a sala PNHUFF
+[2026-01-26T22:01:50.126Z] [INFO] ⏱️ Sincronizando tiempo 0s para usuario 0dldzmrg1aee
+[2026-01-26T22:01:50.146Z] [INFO] ⏱️ Sincronizando tiempo 0s para usuario 0dldzmrg1aee
+[2026-01-26T22:01:56.681Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/BoogiepopPhantom-ED1.webm
+[2026-01-26T22:07:20.044Z] [INFO] ❌ Usuario desconectado: o8ZgrR7kCogIONHhAABu
+[2026-01-26T22:07:20.045Z] [INFO] 👑 Nuevo host en sala PNHUFF (por desconexión): Viaco1
+[2026-01-26T22:07:20.054Z] [INFO] ❌ Usuario desconectado: 7o6Ev_bXPF8A0-YtAABx
+[2026-01-26T22:07:20.054Z] [INFO] 🗑️ Sala PNHUFF eliminada (vacía por desconexión)
+[2026-01-26T22:24:54.729Z] [INFO] ✅ Usuario conectado: UbmWX1pnfEICHBnKAAB4
+[2026-01-26T22:24:59.714Z] [INFO] 🏠 Sala creada: STGX5Y por Viaco
+[2026-01-26T22:24:59.723Z] [INFO] [PROXY API] Forwarding to: https://api.animethemes.moe/anime
+[2026-01-26T22:24:59.729Z] [INFO] 🏠 Sala creada: STGX5Y por Viaco
+[2026-01-26T22:25:04.152Z] [INFO] 📝 Playlist establecida en sala STGX5Y (10 videos)
+[2026-01-26T22:25:10.721Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/ArakawaUnderTheBridge-OP2.webm
+[2026-01-26T22:25:14.972Z] [INFO] ✅ Usuario conectado: JhT3TN0G_IFkkr6zAAB7
+[2026-01-26T22:25:19.963Z] [INFO] 👤 Viaco1 se unió a sala STGX5Y
+[2026-01-26T22:25:19.970Z] [INFO] 👤 Viaco1 se unió a sala STGX5Y
+[2026-01-26T22:25:19.978Z] [INFO] ⏱️ Sincronizando tiempo 0s para usuario bz008d0zkwj
+[2026-01-26T22:25:19.997Z] [INFO] ⏱️ Sincronizando tiempo 0s para usuario bz008d0zkwj
+[2026-01-26T22:25:26.519Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/ArakawaUnderTheBridge-OP2.webm
+[2026-01-26T22:25:51.330Z] [INFO] ⭐ Ranking actualizado en sala STGX5Y - Video: 161-3800-3012, Score: 3
+[2026-01-26T22:26:00.198Z] [INFO] ❌ Usuario desconectado: JhT3TN0G_IFkkr6zAAB7
+[2026-01-26T22:26:45.091Z] [INFO] ❌ Usuario desconectado: UbmWX1pnfEICHBnKAAB4
+[2026-01-26T22:26:45.092Z] [INFO] 🗑️ Sala STGX5Y eliminada (vacía por desconexión)
+[2026-01-26T22:27:32.201Z] [INFO] ✅ Usuario conectado: JAY_HQlfjNt-gHOJAACA
+[2026-01-26T22:27:37.177Z] [INFO] 🏠 Sala creada: 8AIEYW por Viaco
+[2026-01-26T22:27:37.184Z] [INFO] [PROXY API] Forwarding to: https://api.animethemes.moe/anime
+[2026-01-26T22:27:37.202Z] [INFO] 🏠 Sala creada: 8AIEYW por Viaco
+[2026-01-26T22:27:38.994Z] [INFO] 📝 Playlist establecida en sala 8AIEYW (10 videos)
+[2026-01-26T22:27:45.547Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/Asatir-ED1.webm
+[2026-01-26T22:27:58.978Z] [INFO] ✅ Usuario conectado: I2iYryfU8XVW3iIJAACD
+[2026-01-26T22:28:03.974Z] [INFO] 👤 Viaco1 se unió a sala 8AIEYW
+[2026-01-26T22:28:03.981Z] [INFO] 👤 Viaco1 se unió a sala 8AIEYW
+[2026-01-26T22:28:03.989Z] [INFO] ⏱️ Sincronizando tiempo 0s para usuario tkte8y6uwg
+[2026-01-26T22:28:04.006Z] [INFO] ⏱️ Sincronizando tiempo 0s para usuario tkte8y6uwg
+[2026-01-26T22:28:10.533Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/Asatir-ED1.webm
+[2026-01-26T22:28:11.282Z] [ERROR] Video Proxy Error: Request failed with status code 503
+[2026-01-26T22:28:21.557Z] [INFO] 👑 Nuevo host en sala 8AIEYW: Viaco1
+[2026-01-26T22:28:21.557Z] [INFO] 👋 Usuario 25ekirljjko salió de sala 8AIEYW
+[2026-01-26T22:28:21.563Z] [INFO] ❌ Usuario desconectado: JAY_HQlfjNt-gHOJAACA
+[2026-01-26T22:28:24.710Z] [INFO] ✅ Usuario conectado: bdpFTxMWr0XTuBR1AACG
+[2026-01-26T22:28:26.246Z] [INFO] 🗑️ Sala 8AIEYW eliminada (vacía)
+[2026-01-26T22:28:26.246Z] [INFO] 👋 Usuario tkte8y6uwg salió de sala 8AIEYW
+[2026-01-26T22:28:26.250Z] [INFO] ❌ Usuario desconectado: I2iYryfU8XVW3iIJAACD
+[2026-01-26T22:28:29.692Z] [INFO] 🏠 Sala creada: N6PY5O por Viaco
+[2026-01-26T22:28:29.697Z] [INFO] 🏠 Sala creada: N6PY5O por Viaco
+[2026-01-26T22:28:29.698Z] [INFO] [PROXY API] Forwarding to: https://api.animethemes.moe/anime
+[2026-01-26T22:28:31.838Z] [INFO] 📝 Playlist establecida en sala N6PY5O (10 videos)
+[2026-01-26T22:28:38.373Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/Bartender-ED1.webm
+[2026-01-26T22:28:39.104Z] [ERROR] Video Proxy Error: Request failed with status code 503
+[2026-01-26T22:30:12.313Z] [INFO] Auto-limpieza: 0 mensajes eliminados
+[2026-01-26T22:32:04.996Z] [INFO] 🗑️ Sala N6PY5O eliminada (vacía)
+[2026-01-26T22:32:04.996Z] [INFO] 👋 Usuario el8vs8hijoh salió de sala N6PY5O
+[2026-01-26T22:32:05.003Z] [INFO] ❌ Usuario desconectado: bdpFTxMWr0XTuBR1AACG
+[2026-01-26T22:32:08.745Z] [INFO] ✅ Usuario conectado: jTk18mjzPDfUKug4AACJ
+[2026-01-26T22:32:13.734Z] [INFO] 🏠 Sala creada: 2T97NJ por Viaco
+[2026-01-26T22:32:13.741Z] [INFO] [PROXY API] Forwarding to: https://api.animethemes.moe/anime
+[2026-01-26T22:32:13.746Z] [INFO] 🏠 Sala creada: 2T97NJ por Viaco
+[2026-01-26T22:32:18.047Z] [INFO] 📝 Playlist establecida en sala 2T97NJ (10 videos)
+[2026-01-26T22:32:24.583Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/BokuraNoNanokakanSensou-ED1.webm
+[2026-01-26T22:33:26.974Z] [INFO] ▶️ Play en sala 2T97NJ
+[2026-01-26T22:33:34.016Z] [INFO] ⏸️ Pause en sala 2T97NJ
+[2026-01-26T22:33:48.282Z] [INFO] ▶️ Play en sala 2T97NJ
+[2026-01-26T22:33:51.258Z] [INFO] ⏩ Seek a 13.740217681281445s en sala 2T97NJ
+[2026-01-26T22:33:52.050Z] [INFO] ⏩ Seek a 21.834360313756683s en sala 2T97NJ
+[2026-01-26T22:39:19.047Z] [INFO] 🚀 Servidor corriendo en el puerto 3003
+[2026-01-26T22:39:19.049Z] [INFO] 🔌 WebSocket habilitado
+[2026-01-26T22:39:19.089Z] [INFO] Conectado a la base de datos MySQL
+[2026-01-26T22:39:19.142Z] [INFO] ✅ Usuario conectado: 3BbC3YWCLESEJyVAAAAB
+[2026-01-27T00:18:22.651Z] [INFO] 🚀 Servidor corriendo en el puerto 3003
+[2026-01-27T00:18:22.653Z] [INFO] 🔌 WebSocket habilitado
+[2026-01-27T00:18:22.684Z] [INFO] Conectado a la base de datos MySQL
+[2026-01-27T00:19:26.177Z] [INFO] ✅ Usuario conectado: OsScVZVZucbDZWisAAAE
+[2026-01-27T00:19:31.150Z] [INFO] 🏠 Sala creada: G5MVAS por Viaco (WaitMode: true)
+[2026-01-27T00:19:31.156Z] [INFO] [PROXY API] Forwarding to: https://api.animethemes.moe/anime
+[2026-01-27T00:19:33.318Z] [INFO] 📝 Playlist establecida en sala G5MVAS (10 videos)
+[2026-01-27T00:19:39.382Z] [INFO] 🗑️ Sala G5MVAS eliminada (vacía)
+[2026-01-27T00:19:39.382Z] [INFO] 👋 Usuario kn84scv71z salió de sala G5MVAS
+[2026-01-27T00:19:39.386Z] [INFO] ❌ Usuario desconectado: OsScVZVZucbDZWisAAAE
+[2026-01-27T00:19:42.189Z] [INFO] ✅ Usuario conectado: bhT7HfxkY18mObMgAAAH
+[2026-01-27T00:19:47.170Z] [INFO] 🏠 Sala creada: EW4G52 por Viaco (WaitMode: true)
+[2026-01-27T00:19:47.174Z] [INFO] [PROXY API] Forwarding to: https://api.animethemes.moe/anime
+[2026-01-27T00:19:48.407Z] [INFO] 📝 Playlist establecida en sala EW4G52 (10 videos)
+[2026-01-27T00:19:56.107Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/Beatless-OP2-NCBD1080.webm
+[2026-01-27T00:20:13.060Z] [INFO] ✅ Usuario conectado: bqz5HLoT_LXzOo7EAAAK
+[2026-01-27T00:20:18.059Z] [INFO] 👤 Viaco1 se unió a sala EW4G52
+[2026-01-27T00:20:18.064Z] [INFO] 👤 Viaco1 se unió a sala EW4G52
+[2026-01-27T00:20:18.070Z] [INFO] 🕒 Sincronizando usuario so79sdsr7o a 0s
+[2026-01-27T00:20:18.086Z] [INFO] 🕒 Sincronizando usuario so79sdsr7o a 0s
+[2026-01-27T00:20:24.616Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/Beatless-OP2-NCBD1080.webm
+[2026-01-27T00:20:25.366Z] [ERROR] Video Proxy Error Direct: {"message":"Request failed with status code 503","name":"AxiosError","stack":"AxiosError: Request failed with status code 503\n    at settle (C:\\Users\\Tulita\\Desktop\\Ayudante\\Anime\\server\\node_modules\\axios\\dist\\node\\axios.cjs:2086:12)\n    at RedirectableRequest.handleResponse (C:\\Users\\Tulita\\Desktop\\Ayudante\\Anime\\server\\node_modules\\axios\\dist\\node\\axios.cjs:3424:9)\n    at RedirectableRequest.emit (node:events:519:28)\n    at RedirectableRequest._processResponse (C:\\Users\\Tulita\\Desktop\\Ayudante\\Anime\\server\\node_modules\\follow-redirects\\index.js:409:10)\n    at RedirectableRequest._onNativeResponse (C:\\Users\\Tulita\\Desktop\\Ayudante\\Anime\\server\\node_modules\\follow-redirects\\index.js:102:12)\n    at Object.onceWrapper (node:events:634:26)\n    at ClientRequest.emit (node:events:519:28)\n    at HTTPParser.parserOnIncomingClient (node:_http_client:716:27)\n    at HTTPParser.parserOnHeadersComplete (node:_http_common:117:17)\n    at TLSSocket.socketOnData (node:_http_client:558:22)\n    at Axios.request (C:\\Users\\Tulita\\Desktop\\Ayudante\\Anime\\server\\node_modules\\axios\\dist\\node\\axios.cjs:4713:41)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async C:\\Users\\Tulita\\Desktop\\Ayudante\\Anime\\server\\index.js:630:26","config":{"transitional":{"silentJSONParsing":true,"forcedJSONParsing":true,"clarifyTimeoutError":false},"adapter":["xhr","http","fetch"],"transformRequest":[null],"transformResponse":[null],"timeout":0,"xsrfCookieName":"XSRF-TOKEN","xsrfHeaderName":"X-XSRF-TOKEN","maxContentLength":-1,"maxBodyLength":-1,"env":{},"headers":{"Accept":"application/json, text/plain, */*","User-Agent":"YourAnimeTierList/1.0","Referer":"https://animethemes.moe/","Accept-Encoding":"gzip, compress, deflate, br"},"method":"get","url":"https://v.animethemes.moe/Beatless-OP2-NCBD1080.webm","responseType":"stream","allowAbsoluteUrls":true},"code":"ERR_BAD_RESPONSE","status":503}
+[2026-01-27T00:20:25.366Z] [ERROR] Video Proxy Error Message: Request failed with status code 503
+[2026-01-27T00:20:25.366Z] [ERROR] Upstream Response Status: 503
+[2026-01-27T00:20:25.367Z] [ERROR] Upstream Response Headers: {"server":"nginx/1.18.0 (Ubuntu)","date":"Tue, 27 Jan 2026 00:20:25 GMT","content-type":"text/html","content-length":"206","connection":"keep-alive"}
+[2026-01-27T00:23:18.126Z] [INFO] ❌ Usuario desconectado: bqz5HLoT_LXzOo7EAAAK
+[2026-01-27T00:23:18.285Z] [INFO] ❌ Usuario desconectado: bhT7HfxkY18mObMgAAAH
+[2026-01-27T00:23:18.286Z] [INFO] 🗑️ Sala EW4G52 eliminada (vacía por desconexión)
+[2026-01-27T00:27:54.186Z] [INFO] ✅ Usuario conectado: U8Qs5eFEGnU9Lu8iAAAR
+[2026-01-27T00:27:59.179Z] [INFO] [PROXY API] Forwarding to: https://api.animethemes.moe/anime
+[2026-01-27T00:28:06.978Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/CardfightVanguardGaidenIf-ED1.webm
+[2026-01-27T00:28:14.424Z] [INFO] ✅ Usuario conectado: 57lxD0fkrueJQrl6AAAU
+[2026-01-27T00:29:05.595Z] [INFO] ❌ Usuario desconectado: U8Qs5eFEGnU9Lu8iAAAR
+[2026-01-27T00:29:14.391Z] [INFO] ✅ Usuario conectado: XX_QL4-B_N3ASP5QAAAZ
+[2026-01-27T00:29:18.007Z] [INFO] ❌ Usuario desconectado: 57lxD0fkrueJQrl6AAAU
+[2026-01-27T00:29:19.378Z] [INFO] [PROXY API] Forwarding to: https://api.animethemes.moe/anime
+[2026-01-27T00:29:27.043Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/Aiura-ED1.webm
+[2026-01-27T00:29:41.857Z] [INFO] ✅ Usuario conectado: fXIdf0S3mRsVtCKXAAAc
+[2026-01-27T00:32:01.333Z] [INFO] ❌ Usuario desconectado: fXIdf0S3mRsVtCKXAAAc
+[2026-01-27T00:32:02.126Z] [INFO] ❌ Usuario desconectado: XX_QL4-B_N3ASP5QAAAZ
+[2026-01-27T00:33:20.521Z] [INFO] ✅ Usuario conectado: YyRojdsOO0QDCzchAAAj
+[2026-01-27T00:33:22.332Z] [INFO] ❌ Usuario desconectado: YyRojdsOO0QDCzchAAAj
+[2026-01-27T00:33:24.522Z] [INFO] ✅ Usuario conectado: xP0XnWJMmNqYivUZAAAo
+[2026-01-27T00:33:29.505Z] [INFO] [PROXY API] Forwarding to: https://api.animethemes.moe/anime
+[2026-01-27T00:33:37.151Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/BuddyComplex-ED1.webm
+[2026-01-27T00:33:44.952Z] [INFO] ✅ Usuario conectado: u0j5OKi61uOv-altAAAr
+[2026-01-27T00:36:47.153Z] [INFO] ❌ Usuario desconectado: xP0XnWJMmNqYivUZAAAo
+[2026-01-27T00:36:47.162Z] [INFO] ❌ Usuario desconectado: u0j5OKi61uOv-altAAAr
+[2026-01-27T00:40:03.296Z] [INFO] ✅ Usuario conectado: opHqJPhhHVpfqIDeAAAy
+[2026-01-27T00:40:08.291Z] [INFO] [PROXY API] Forwarding to: https://api.animethemes.moe/anime
+[2026-01-27T00:40:16.548Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/Caligula-OP2-NCBD1080.webm
+[2026-01-27T00:41:10.693Z] [INFO] ❌ Usuario desconectado: opHqJPhhHVpfqIDeAAAy
+[2026-01-27T00:42:55.150Z] [INFO] ✅ Usuario conectado: -E0h7zA4ZHRd8UODAAA3
+[2026-01-27T00:43:00.609Z] [INFO] 🏠 Sala creada: TUBMFZ por Viaco (WaitMode: true)
+[2026-01-27T00:43:00.633Z] [INFO] [PROXY API] Forwarding to: https://api.animethemes.moe/anime
+[2026-01-27T00:43:01.803Z] [INFO] 📝 Playlist establecida en sala TUBMFZ (10 videos)
+[2026-01-27T00:43:08.337Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/ArakawaUnderTheBridge-OP2.webm
+[2026-01-27T00:43:13.035Z] [INFO] ✅ Usuario conectado: ZdD8ZsmQ2lzKv_-dAAA6
+[2026-01-27T00:43:18.030Z] [INFO] 👤 Viaco1 se unió a sala TUBMFZ
+[2026-01-27T00:43:18.036Z] [INFO] 👤 Viaco1 se unió a sala TUBMFZ
+[2026-01-27T00:43:18.039Z] [INFO] 🕒 Sincronizando usuario tg5nqlmf2ge a 0s
+[2026-01-27T00:43:18.051Z] [INFO] 🕒 Sincronizando usuario tg5nqlmf2ge a 0s
+[2026-01-27T00:43:24.576Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/ArakawaUnderTheBridge-OP2.webm
+[2026-01-27T00:43:25.311Z] [ERROR] Video Proxy Error Direct: {"message":"Request failed with status code 503","name":"AxiosError","stack":"AxiosError: Request failed with status code 503\n    at settle (C:\\Users\\Tulita\\Desktop\\Ayudante\\Anime\\server\\node_modules\\axios\\dist\\node\\axios.cjs:2086:12)\n    at RedirectableRequest.handleResponse (C:\\Users\\Tulita\\Desktop\\Ayudante\\Anime\\server\\node_modules\\axios\\dist\\node\\axios.cjs:3424:9)\n    at RedirectableRequest.emit (node:events:519:28)\n    at RedirectableRequest._processResponse (C:\\Users\\Tulita\\Desktop\\Ayudante\\Anime\\server\\node_modules\\follow-redirects\\index.js:409:10)\n    at RedirectableRequest._onNativeResponse (C:\\Users\\Tulita\\Desktop\\Ayudante\\Anime\\server\\node_modules\\follow-redirects\\index.js:102:12)\n    at Object.onceWrapper (node:events:634:26)\n    at ClientRequest.emit (node:events:519:28)\n    at HTTPParser.parserOnIncomingClient (node:_http_client:716:27)\n    at HTTPParser.parserOnHeadersComplete (node:_http_common:117:17)\n    at TLSSocket.socketOnData (node:_http_client:558:22)\n    at Axios.request (C:\\Users\\Tulita\\Desktop\\Ayudante\\Anime\\server\\node_modules\\axios\\dist\\node\\axios.cjs:4713:41)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async C:\\Users\\Tulita\\Desktop\\Ayudante\\Anime\\server\\index.js:630:26","config":{"transitional":{"silentJSONParsing":true,"forcedJSONParsing":true,"clarifyTimeoutError":false},"adapter":["xhr","http","fetch"],"transformRequest":[null],"transformResponse":[null],"timeout":0,"xsrfCookieName":"XSRF-TOKEN","xsrfHeaderName":"X-XSRF-TOKEN","maxContentLength":-1,"maxBodyLength":-1,"env":{},"headers":{"Accept":"application/json, text/plain, */*","User-Agent":"YourAnimeTierList/1.0","Referer":"https://animethemes.moe/","Accept-Encoding":"gzip, compress, deflate, br"},"method":"get","url":"https://v.animethemes.moe/ArakawaUnderTheBridge-OP2.webm","responseType":"stream","allowAbsoluteUrls":true},"code":"ERR_BAD_RESPONSE","status":503}
+[2026-01-27T00:43:25.312Z] [ERROR] Video Proxy Error Message: Request failed with status code 503
+[2026-01-27T00:43:25.312Z] [ERROR] Upstream Response Status: 503
+[2026-01-27T00:43:25.313Z] [ERROR] Upstream Response Headers: {"server":"nginx/1.18.0 (Ubuntu)","date":"Tue, 27 Jan 2026 00:43:24 GMT","content-type":"text/html","content-length":"206","connection":"keep-alive"}
+[2026-01-27T00:44:59.676Z] [INFO] ❌ Usuario desconectado: ZdD8ZsmQ2lzKv_-dAAA6
+[2026-01-27T00:45:00.150Z] [INFO] ❌ Usuario desconectado: -E0h7zA4ZHRd8UODAAA3
+[2026-01-27T00:45:00.150Z] [INFO] 🗑️ Sala TUBMFZ eliminada (vacía por desconexión)
+[2026-01-27T00:57:07.797Z] [INFO] ✅ Usuario conectado: Zx07HWvX1Bq34ySQAABB
+[2026-01-27T00:57:12.782Z] [INFO] 🏠 Sala creada: VB7L1L por Viaco (WaitMode: true)
+[2026-01-27T00:57:12.791Z] [INFO] [PROXY API] Forwarding to: https://api.animethemes.moe/anime
+[2026-01-27T00:57:14.570Z] [INFO] 📝 Playlist establecida en sala VB7L1L (10 videos)
+[2026-01-27T00:57:21.092Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/DotHackLiminality-OP2.webm
+[2026-01-27T00:57:21.854Z] [ERROR] Video Proxy Error Direct: {"message":"Request failed with status code 503","name":"AxiosError","stack":"AxiosError: Request failed with status code 503\n    at settle (C:\\Users\\Tulita\\Desktop\\Ayudante\\Anime\\server\\node_modules\\axios\\dist\\node\\axios.cjs:2086:12)\n    at RedirectableRequest.handleResponse (C:\\Users\\Tulita\\Desktop\\Ayudante\\Anime\\server\\node_modules\\axios\\dist\\node\\axios.cjs:3424:9)\n    at RedirectableRequest.emit (node:events:519:28)\n    at RedirectableRequest._processResponse (C:\\Users\\Tulita\\Desktop\\Ayudante\\Anime\\server\\node_modules\\follow-redirects\\index.js:409:10)\n    at RedirectableRequest._onNativeResponse (C:\\Users\\Tulita\\Desktop\\Ayudante\\Anime\\server\\node_modules\\follow-redirects\\index.js:102:12)\n    at Object.onceWrapper (node:events:634:26)\n    at ClientRequest.emit (node:events:519:28)\n    at HTTPParser.parserOnIncomingClient (node:_http_client:716:27)\n    at HTTPParser.parserOnHeadersComplete (node:_http_common:117:17)\n    at TLSSocket.socketOnData (node:_http_client:558:22)\n    at Axios.request (C:\\Users\\Tulita\\Desktop\\Ayudante\\Anime\\server\\node_modules\\axios\\dist\\node\\axios.cjs:4713:41)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async C:\\Users\\Tulita\\Desktop\\Ayudante\\Anime\\server\\index.js:630:26","config":{"transitional":{"silentJSONParsing":true,"forcedJSONParsing":true,"clarifyTimeoutError":false},"adapter":["xhr","http","fetch"],"transformRequest":[null],"transformResponse":[null],"timeout":0,"xsrfCookieName":"XSRF-TOKEN","xsrfHeaderName":"X-XSRF-TOKEN","maxContentLength":-1,"maxBodyLength":-1,"env":{},"headers":{"Accept":"application/json, text/plain, */*","User-Agent":"YourAnimeTierList/1.0","Referer":"https://animethemes.moe/","Accept-Encoding":"gzip, compress, deflate, br"},"method":"get","url":"https://v.animethemes.moe/DotHackLiminality-OP2.webm","responseType":"stream","allowAbsoluteUrls":true},"code":"ERR_BAD_RESPONSE","status":503}
+[2026-01-27T00:57:21.854Z] [ERROR] Video Proxy Error Message: Request failed with status code 503
+[2026-01-27T00:57:21.854Z] [ERROR] Upstream Response Status: 503
+[2026-01-27T00:57:21.856Z] [ERROR] Upstream Response Headers: {"server":"nginx/1.18.0 (Ubuntu)","date":"Tue, 27 Jan 2026 00:57:21 GMT","content-type":"text/html","content-length":"206","connection":"keep-alive"}
+[2026-01-27T00:57:29.027Z] [INFO] ✅ Usuario conectado: LaUPVhFZMWz0zJUyAABE
+[2026-01-27T00:57:34.018Z] [INFO] 👤 Viaco1 se unió a sala VB7L1L
+[2026-01-27T00:57:34.026Z] [INFO] 👤 Viaco1 se unió a sala VB7L1L
+[2026-01-27T00:57:34.028Z] [INFO] 🕒 Sincronizando usuario yq7r642c86 a 0s
+[2026-01-27T00:57:34.048Z] [INFO] 🕒 Sincronizando usuario yq7r642c86 a 0s
+[2026-01-27T00:57:40.541Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/DotHackLiminality-OP2.webm
+[2026-01-27T00:57:41.278Z] [ERROR] Video Proxy Error Direct: {"message":"Request failed with status code 503","name":"AxiosError","stack":"AxiosError: Request failed with status code 503\n    at settle (C:\\Users\\Tulita\\Desktop\\Ayudante\\Anime\\server\\node_modules\\axios\\dist\\node\\axios.cjs:2086:12)\n    at RedirectableRequest.handleResponse (C:\\Users\\Tulita\\Desktop\\Ayudante\\Anime\\server\\node_modules\\axios\\dist\\node\\axios.cjs:3424:9)\n    at RedirectableRequest.emit (node:events:519:28)\n    at RedirectableRequest._processResponse (C:\\Users\\Tulita\\Desktop\\Ayudante\\Anime\\server\\node_modules\\follow-redirects\\index.js:409:10)\n    at RedirectableRequest._onNativeResponse (C:\\Users\\Tulita\\Desktop\\Ayudante\\Anime\\server\\node_modules\\follow-redirects\\index.js:102:12)\n    at Object.onceWrapper (node:events:634:26)\n    at ClientRequest.emit (node:events:519:28)\n    at HTTPParser.parserOnIncomingClient (node:_http_client:716:27)\n    at HTTPParser.parserOnHeadersComplete (node:_http_common:117:17)\n    at TLSSocket.socketOnData (node:_http_client:558:22)\n    at Axios.request (C:\\Users\\Tulita\\Desktop\\Ayudante\\Anime\\server\\node_modules\\axios\\dist\\node\\axios.cjs:4713:41)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async C:\\Users\\Tulita\\Desktop\\Ayudante\\Anime\\server\\index.js:630:26","config":{"transitional":{"silentJSONParsing":true,"forcedJSONParsing":true,"clarifyTimeoutError":false},"adapter":["xhr","http","fetch"],"transformRequest":[null],"transformResponse":[null],"timeout":0,"xsrfCookieName":"XSRF-TOKEN","xsrfHeaderName":"X-XSRF-TOKEN","maxContentLength":-1,"maxBodyLength":-1,"env":{},"headers":{"Accept":"application/json, text/plain, */*","User-Agent":"YourAnimeTierList/1.0","Referer":"https://animethemes.moe/","Accept-Encoding":"gzip, compress, deflate, br"},"method":"get","url":"https://v.animethemes.moe/DotHackLiminality-OP2.webm","responseType":"stream","allowAbsoluteUrls":true},"code":"ERR_BAD_RESPONSE","status":503}
+[2026-01-27T00:57:41.278Z] [ERROR] Video Proxy Error Message: Request failed with status code 503
+[2026-01-27T00:57:41.278Z] [ERROR] Upstream Response Status: 503
+[2026-01-27T00:57:41.279Z] [ERROR] Upstream Response Headers: {"server":"nginx/1.18.0 (Ubuntu)","date":"Tue, 27 Jan 2026 00:57:40 GMT","content-type":"text/html","content-length":"206","connection":"keep-alive"}
+[2026-01-27T00:57:49.302Z] [INFO] 💪 Forzando inicio en sala VB7L1L
+[2026-01-27T00:57:58.619Z] [INFO] ⏸️ Pause en sala VB7L1L
+[2026-01-27T00:57:58.929Z] [INFO] ▶️ Play en sala VB7L1L
+[2026-01-27T00:57:59.821Z] [INFO] ⏸️ Pause en sala VB7L1L
+[2026-01-27T00:58:00.594Z] [INFO] ▶️ Play en sala VB7L1L
+[2026-01-27T00:58:01.254Z] [INFO] ⏸️ Pause en sala VB7L1L
+[2026-01-27T00:58:02.504Z] [INFO] 💪 Forzando inicio en sala VB7L1L
+[2026-01-27T00:58:03.006Z] [INFO] ⏸️ Pause en sala VB7L1L
+[2026-01-27T00:59:14.139Z] [INFO] ❌ Usuario desconectado: Zx07HWvX1Bq34ySQAABB
+[2026-01-27T00:59:14.140Z] [INFO] 👑 Nuevo host en sala VB7L1L (por desconexión): Viaco1
+[2026-01-27T00:59:14.149Z] [INFO] ❌ Usuario desconectado: LaUPVhFZMWz0zJUyAABE
+[2026-01-27T00:59:14.149Z] [INFO] 🗑️ Sala VB7L1L eliminada (vacía por desconexión)
+[2026-01-27T01:00:38.106Z] [INFO] ✅ Usuario conectado: Oq2p36o3a-Y4GFJoAABL
+[2026-01-27T01:00:43.094Z] [INFO] 🏠 Sala creada: SUQODK por Viaco (WaitMode: true)
+[2026-01-27T01:00:43.099Z] [INFO] [PROXY API] Forwarding to: https://api.animethemes.moe/anime
+[2026-01-27T01:00:44.751Z] [INFO] 📝 Playlist establecida en sala SUQODK (10 videos)
+[2026-01-27T01:00:51.296Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/243SeiinVolleyBu-ED1-NCBD1080.webm
+[2026-01-27T01:00:59.908Z] [INFO] ✅ Usuario conectado: UY4k1k8PwxDVzX1wAABO
+[2026-01-27T01:01:04.906Z] [INFO] 👤 Viaco1 se unió a sala SUQODK
+[2026-01-27T01:01:04.913Z] [INFO] 👤 Viaco1 se unió a sala SUQODK
+[2026-01-27T01:01:04.916Z] [INFO] 🕒 Sincronizando usuario xsuklzxfq8b a 0s
+[2026-01-27T01:01:04.933Z] [INFO] 🕒 Sincronizando usuario xsuklzxfq8b a 0s
+[2026-01-27T01:01:11.430Z] [INFO] [PROXY VIDEO] Streaming: https://v.animethemes.moe/243SeiinVolleyBu-ED1-NCBD1080.webm
+[2026-01-27T01:01:12.171Z] [ERROR] Video Proxy Error Direct: {"message":"Request failed with status code 503","name":"AxiosError","stack":"AxiosError: Request failed with status code 503\n    at settle (C:\\Users\\Tulita\\Desktop\\Ayudante\\Anime\\server\\node_modules\\axios\\dist\\node\\axios.cjs:2086:12)\n    at RedirectableRequest.handleResponse (C:\\Users\\Tulita\\Desktop\\Ayudante\\Anime\\server\\node_modules\\axios\\dist\\node\\axios.cjs:3424:9)\n    at RedirectableRequest.emit (node:events:519:28)\n    at RedirectableRequest._processResponse (C:\\Users\\Tulita\\Desktop\\Ayudante\\Anime\\server\\node_modules\\follow-redirects\\index.js:409:10)\n    at RedirectableRequest._onNativeResponse (C:\\Users\\Tulita\\Desktop\\Ayudante\\Anime\\server\\node_modules\\follow-redirects\\index.js:102:12)\n    at Object.onceWrapper (node:events:634:26)\n    at ClientRequest.emit (node:events:519:28)\n    at HTTPParser.parserOnIncomingClient (node:_http_client:716:27)\n    at HTTPParser.parserOnHeadersComplete (node:_http_common:117:17)\n    at TLSSocket.socketOnData (node:_http_client:558:22)\n    at Axios.request (C:\\Users\\Tulita\\Desktop\\Ayudante\\Anime\\server\\node_modules\\axios\\dist\\node\\axios.cjs:4713:41)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async C:\\Users\\Tulita\\Desktop\\Ayudante\\Anime\\server\\index.js:630:26","config":{"transitional":{"silentJSONParsing":true,"forcedJSONParsing":true,"clarifyTimeoutError":false},"adapter":["xhr","http","fetch"],"transformRequest":[null],"transformResponse":[null],"timeout":0,"xsrfCookieName":"XSRF-TOKEN","xsrfHeaderName":"X-XSRF-TOKEN","maxContentLength":-1,"maxBodyLength":-1,"env":{},"headers":{"Accept":"application/json, text/plain, */*","User-Agent":"YourAnimeTierList/1.0","Referer":"https://animethemes.moe/","Accept-Encoding":"gzip, compress, deflate, br"},"method":"get","url":"https://v.animethemes.moe/243SeiinVolleyBu-ED1-NCBD1080.webm","responseType":"stream","allowAbsoluteUrls":true},"code":"ERR_BAD_RESPONSE","status":503}
+[2026-01-27T01:01:12.172Z] [ERROR] Video Proxy Error Message: Request failed with status code 503
+[2026-01-27T01:01:12.172Z] [ERROR] Upstream Response Status: 503
+[2026-01-27T01:01:12.173Z] [ERROR] Upstream Response Headers: {"server":"nginx/1.18.0 (Ubuntu)","date":"Tue, 27 Jan 2026 01:01:11 GMT","content-type":"text/html","content-length":"206","connection":"keep-alive"}
+[2026-01-27T01:01:21.549Z] [INFO] 💪 Forzando inicio en sala SUQODK
+[2026-01-27T01:01:30.156Z] [INFO] ⏸️ Pause en sala SUQODK
+[2026-01-27T01:01:31.461Z] [INFO] 💪 Forzando inicio en sala SUQODK
+[2026-01-27T01:01:32.719Z] [INFO] ⏸️ Pause en sala SUQODK
+[2026-01-27T01:02:28.157Z] [INFO] 💪 Forzando inicio en sala SUQODK
+[2026-01-27T01:02:29.142Z] [INFO] ⏸️ Pause en sala SUQODK
+[2026-01-27T01:02:29.797Z] [INFO] 💪 Forzando inicio en sala SUQODK
+[2026-01-27T01:02:41.829Z] [INFO] ⏸️ Pause en sala SUQODK
+[2026-01-27T01:02:43.926Z] [INFO] 💪 Forzando inicio en sala SUQODK
+[2026-01-27T01:02:59.346Z] [INFO] ⏩ Seek a 44.94138117784077s en sala SUQODK
+[2026-01-27T01:03:02.954Z] [INFO] ⏩ Seek a 74.00446467717444s en sala SUQODK
+[2026-01-27T01:03:16.343Z] [INFO] ⏩ Seek a 0s en sala SUQODK
+[2026-01-27T01:03:19.070Z] [INFO] ⏩ Seek a 0s en sala SUQODK
+[2026-01-27T01:03:19.873Z] [INFO] ▶️ Play en sala SUQODK
+[2026-01-27T01:03:21.000Z] [INFO] ⏸️ Pause en sala SUQODK
+[2026-01-27T01:03:22.156Z] [INFO] 💪 Forzando inicio en sala SUQODK
+[2026-01-27T01:03:23.384Z] [INFO] ⏸️ Pause en sala SUQODK
+[2026-01-27T01:03:24.272Z] [INFO] 💪 Forzando inicio en sala SUQODK
+[2026-01-27T01:03:26.146Z] [INFO] ⏩ Seek a 6.9082101787127685s en sala SUQODK
+[2026-01-27T01:03:29.213Z] [INFO] ⏸️ Pause en sala SUQODK
+[2026-01-27T01:03:30.703Z] [INFO] 💪 Forzando inicio en sala SUQODK
+[2026-01-27T01:03:48.637Z] [INFO] ⏩ Seek a 1.5261576788361642s en sala SUQODK
+[2026-01-27T01:03:50.261Z] [INFO] ⏩ Seek a 2.602568178811485s en sala SUQODK
+[2026-01-27T01:03:50.410Z] [INFO] ⏩ Seek a 4.396585678770353s en sala SUQODK
+[2026-01-27T01:03:50.604Z] [INFO] ⏩ Seek a 17.67231517846598s en sala SUQODK
+[2026-01-27T01:03:51.115Z] [INFO] ⏩ Seek a 36.3300971780382s en sala SUQODK
+[2026-01-27T01:03:54.263Z] [INFO] ⏸️ Pause en sala SUQODK
+[2026-01-27T01:07:33.666Z] [INFO] ❌ Usuario desconectado: UY4k1k8PwxDVzX1wAABO
+[2026-01-27T01:07:34.133Z] [INFO] ❌ Usuario desconectado: Oq2p36o3a-Y4GFJoAABL
+[2026-01-27T01:07:34.133Z] [INFO] 🗑️ Sala SUQODK eliminada (vacía por desconexión)
+[2026-01-27T01:18:22.644Z] [INFO] Auto-limpieza: 0 mensajes eliminados

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAuthStore from '../store/useAuthStore';
 import FloatingChatButton from './FloatingChatButton';
+import FloatingReadyButton from './FloatingReadyButton';
 import toast from 'react-hot-toast';
 
 function FloatingButtons() {
@@ -137,10 +138,13 @@ function FloatingButtons() {
         );
     }
 
-    // Si hay usuario, mostrar chat y perfil
+    // Si hay usuario, mostrar ready, chat y perfil
     return (
         <div className="fixed bottom-6 right-6 z-50 animate-fade-in-up">
             <div className="flex items-center gap-3">
+                {/* Ready Button (solo si waitMode activo) */}
+                <FloatingReadyButton />
+
                 {/* Chat Button */}
                 <FloatingChatButton />
 

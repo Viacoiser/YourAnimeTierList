@@ -8,6 +8,25 @@ const jwt = require('jsonwebtoken');
 const axios = require('axios');
 const cookieParser = require('cookie-parser');
 const setupSocket = require('./socket');
+const fs = require('fs');
+const path = require('path');
+
+// --- SISTEMA DE LOGS (Guardar en archivo) ---
+const logStream = fs.createWriteStream(path.join(__dirname, 'server_logs.txt'), { flags: 'a' });
+
+function fileLog(type, args) {
+    const timestamp = new Date().toISOString();
+    const message = args.map(arg => (typeof arg === 'object' ? JSON.stringify(arg) : arg)).join(' ');
+    logStream.write(`[${timestamp}] [${type}] ${message}\n`);
+}
+
+const originalLog = console.log;
+const originalError = console.error;
+const originalWarn = console.warn;
+
+console.log = (...args) => { originalLog(...args); fileLog('INFO', args); };
+console.error = (...args) => { originalError(...args); fileLog('ERROR', args); };
+console.warn = (...args) => { originalWarn(...args); fileLog('WARN', args); };
 
 const app = express();
 app.use(express.json());
@@ -578,15 +597,10 @@ setInterval(() => {
 // --- PROXY PARA ANIMETHEMES (Evitar CORS) ---
 app.get(/^\/api\/proxy\/(.*)/, async (req, res) => {
     try {
-        // Reconstruir la URL destino
-        // req.url es ej: /api/proxy/anime/123?include=...
-        // Queremos: https://api.animethemes.moe/anime/123?include=...
-
-        // Removemos /api/proxy del inicio
         const endpoint = req.params[0];
         const targetUrl = `https://api.animethemes.moe/${endpoint}`;
 
-        console.log(`[PROXY] Forwarding to: ${targetUrl}`);
+        console.log(`[PROXY API] Forwarding to: ${targetUrl}`);
 
         const response = await axios.get(targetUrl, {
             params: req.query,
@@ -603,6 +617,45 @@ app.get(/^\/api\/proxy\/(.*)/, async (req, res) => {
             return res.status(error.response.status).json(error.response.data);
         }
         res.status(500).json({ message: 'Error en proxy', error: error.message });
+    }
+});
+
+// --- PROXY PARA VIDEO (Preloading) ---
+app.get('/api/video-proxy', async (req, res) => {
+    const videoUrl = req.query.url;
+    if (!videoUrl) return res.status(400).send('URL required');
+
+    try {
+        console.log(`[PROXY VIDEO] Streaming: ${videoUrl}`);
+        const response = await axios({
+            method: 'get',
+            url: videoUrl,
+            responseType: 'stream',
+            headers: {
+                'User-Agent': 'YourAnimeTierList/1.0',
+                'Referer': 'https://animethemes.moe/'
+            }
+        });
+
+        // Copiar headers importantes
+        if (response.headers['content-type']) res.set('Content-Type', response.headers['content-type']);
+        if (response.headers['content-length']) res.set('Content-Length', response.headers['content-length']);
+
+        response.data.pipe(res);
+    } catch (error) {
+        console.error('Video Proxy Error Direct:', error.toJSON ? error.toJSON() : error);
+        console.error('Video Proxy Error Message:', error.message);
+        if (error.response) {
+            console.error('Upstream Response Status:', error.response.status);
+            console.error('Upstream Response Headers:', error.response.headers);
+        } else {
+            console.error('No Response Object found in error. Keys:', Object.keys(error));
+        }
+        // Si es 403/404/503, manejar como recurso no disponible
+        if (error.response && [403, 404, 503].includes(error.response.status)) {
+            return res.status(404).send('Video not found, forbidden or service unavailable');
+        }
+        res.status(500).send('Error proxying video');
     }
 });
 

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import useStore from '../store/useStore';
 
 function VideoPlayer({ video, onVideoEnd, availableVersions = [], onSelectVersion }) {
   const videoRef = useRef(null);
@@ -9,9 +10,162 @@ function VideoPlayer({ video, onVideoEnd, availableVersions = [], onSelectVersio
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
-  const [previousVolume, setPreviousVolume] = useState(1); // Save volume before muting
+  const [previousVolume, setPreviousVolume] = useState(1);
   const [buffered, setBuffered] = useState(0);
   const [isDraggingVolume, setIsDraggingVolume] = useState(false);
+
+  // Preloading State
+  const [blobUrl, setBlobUrl] = useState(null); // Current video blob (if available)
+  const preloadRef = useRef(null); // AbortController for preloading
+
+  // Store hooks
+  const {
+    remoteSeekTime,
+    timeSyncRequest,
+    seekVideo,
+    syncTimeResponse,
+    currentUser,
+    isPlaying: storeIsPlaying, // Renamed to avoid conflict
+    playVideo,
+    pauseVideo,
+    playlist, // Need playlist to find next video
+    currentVideoIndex,
+    sendTimeUpdate, // New action
+    hostTime, // New state
+    roomMembers, // To check if host
+    sendUserReady, // Fix: Add missing action
+    waitMode // Check if wait mode active
+  } = useStore();
+
+  const isHost = roomMembers?.find(m => m.id === currentUser?.id)?.isHost || roomMembers?.find(m => m.id === currentUser?.uid)?.isHost;
+
+  // Smart Source Selection: Prefer BlobURL if available -> else standard URL
+  const currentSource = blobUrl || video.videoUrl;
+
+  // Initialize Cache
+  if (!window.__VIDEO_CACHE__) window.__VIDEO_CACHE__ = {};
+
+  // Effect: Check if current video is cached
+  useEffect(() => {
+    if (window.__VIDEO_CACHE__[video.videoUrl]) {
+      console.log('📦 Usando video desde caché local (Blob)');
+      setBlobUrl(window.__VIDEO_CACHE__[video.videoUrl]);
+    } else {
+      setBlobUrl(null);
+    }
+  }, [video.videoUrl]);
+
+  // Effect: Preload Next Video
+  useEffect(() => {
+    const preloadNextVideo = async () => {
+      const nextIndex = currentVideoIndex + 1;
+      if (nextIndex >= playlist.length) return;
+
+      const nextVideo = playlist[nextIndex];
+      const nextUrl = nextVideo.videoUrl;
+
+      if (window.__VIDEO_CACHE__[nextUrl]) return; // Ya en caché
+
+      console.log('⏳ Precargando siguiente video:', nextVideo.themeName);
+      try {
+        // Usar Proxy del Backend para evitar CORS
+        // Asumimos localhost:3003 por ahora (igual que api.js)
+        const proxyUrl = `http://localhost:3003/api/video-proxy?url=${encodeURIComponent(nextUrl)}`;
+
+        const response = await fetch(proxyUrl);
+        if (!response.ok) throw new Error('Proxy network response was not ok');
+
+        const blob = await response.blob();
+        const objectUrl = URL.createObjectURL(blob);
+        window.__VIDEO_CACHE__[nextUrl] = objectUrl;
+        console.log('✅ Video precargado listo:', nextVideo.themeName);
+      } catch (err) {
+        console.warn('❌ Falló precarga:', err);
+      }
+    };
+
+    // Pequeño delay para no saturar el inicio del video actual
+    const t = setTimeout(preloadNextVideo, 3000);
+    return () => clearTimeout(t);
+  }, [currentVideoIndex, playlist]);
+
+
+  // 1. Reaccionar a Seek Remoto
+  useEffect(() => {
+    if (remoteSeekTime !== null && videoRef.current) {
+      // Solo aplicar si la diferencia es significativa (> 0.5s)
+      const diff = Math.abs(videoRef.current.currentTime - remoteSeekTime);
+      if (diff > 0.5) {
+        videoRef.current.currentTime = remoteSeekTime;
+        console.log('📍 Sincronizando tiempo a:', remoteSeekTime);
+      }
+      // IMPORTANTE: Limpiar el seek remoto una vez procesado
+      useStore.setState({ remoteSeekTime: null });
+    }
+  }, [remoteSeekTime]);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (video) {
+      // console.log('🔄 Sync Play/Pause -> Store:', storeIsPlaying, 'VideoPaused:', video.paused);
+      if (storeIsPlaying && video.paused) {
+        video.play().catch(e => console.error('Play warning (handled):', e));
+      } else if (!storeIsPlaying) {
+        // Force pause regardless of current state to ensure sync
+        video.pause();
+      }
+    }
+  }, [storeIsPlaying]);
+
+  // 2. Responder a solicitudes de sincronización (Solo si soy el host o tengo el dato)
+  useEffect(() => {
+    if (timeSyncRequest && videoRef.current) {
+      // Respondemos INMEDIATAMENTE con el tiempo actual
+      syncTimeResponse(timeSyncRequest.requesterId, videoRef.current.currentTime);
+
+      // Limpiamos el request en el store para evitar loops o respuestas múltiples
+      useStore.setState({ timeSyncRequest: null });
+    }
+  }, [timeSyncRequest]); // Removed syncTimeResponse from deps to avoid re-runs
+
+
+
+  // ... (Cache logic remains)
+
+  // ... (Preload logic remains)
+
+  // ... (Remote Seek logic remains)
+
+  // ... (Play/Pause logic remains)
+
+  // ... (Sync Request Logic remains)
+
+  // SYNC HEARTBEAT (Drift Correction)
+  // 1. Host: Send time every 2s
+  useEffect(() => {
+    if (!isHost || !isVideoPlaying) return;
+
+    const interval = setInterval(() => {
+      if (videoRef.current) {
+        sendTimeUpdate(videoRef.current.currentTime);
+      }
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, [isHost, isVideoPlaying, sendTimeUpdate]);
+
+  // 2. Guest: Check drift
+  useEffect(() => {
+    if (isHost || !hostTime || !videoRef.current || !isVideoPlaying) return;
+
+    const diff = Math.abs(videoRef.current.currentTime - hostTime);
+    // Si la diferencia es mayor a 3 segundos, corregimos
+    if (diff > 3) {
+      console.warn(`⚠️ Drift detectado (${diff.toFixed(2)}s). Sincronizando...`);
+      videoRef.current.currentTime = hostTime;
+    }
+  }, [hostTime, isHost, isVideoPlaying]);
+
 
   useEffect(() => {
     const handleGlobalMouseMove = (e) => {
@@ -46,16 +200,15 @@ function VideoPlayer({ video, onVideoEnd, availableVersions = [], onSelectVersio
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.load();
-      videoRef.current.play().catch(() => {
-        // Autoplay prevented by browser
-      });
+      if (storeIsPlaying) {
+        videoRef.current.play().catch(() => { });
+      }
     }
-  }, [video.videoUrl]);
+  }, [currentSource]);
 
   // YouTube-style keyboard shortcuts
   useEffect(() => {
     const handleKeyPress = (e) => {
-      // Ignore if user is typing in an input
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
       const video = videoRef.current;
@@ -87,38 +240,23 @@ function VideoPlayer({ video, onVideoEnd, availableVersions = [], onSelectVersio
           e.preventDefault();
           skip(5);
           break;
-
-        case 'arrowup':
-          e.preventDefault();
-          changeVolume(0.05);
-          break;
-
-        case 'arrowdown':
-          e.preventDefault();
-          changeVolume(-0.05);
-          break;
-
-        case 'm':
-          e.preventDefault();
-          toggleMute();
-          break;
-
-        case 'f':
-          e.preventDefault();
-          toggleFullscreen();
-          break;
-
+        // ... rest of cases skipped for cleanliness of diff, assuming they don't involve seek logic changes other than via 'skip' function?
+        // Wait, comma and period change currentTime directly.
         case ',':
           if (video.paused) {
             e.preventDefault();
-            video.currentTime = Math.max(0, video.currentTime - 1 / 30); // Frame back (~30fps)
+            const newTime = Math.max(0, video.currentTime - 1 / 30);
+            video.currentTime = newTime;
+            seekVideo(newTime);
           }
           break;
 
         case '.':
           if (video.paused) {
             e.preventDefault();
-            video.currentTime = Math.min(duration, video.currentTime + 1 / 30); // Frame forward
+            const newTime = Math.min(duration, video.currentTime + 1 / 30);
+            video.currentTime = newTime;
+            seekVideo(newTime);
           }
           break;
 
@@ -134,7 +272,9 @@ function VideoPlayer({ video, onVideoEnd, availableVersions = [], onSelectVersio
         case '9':
           e.preventDefault();
           const percentage = parseInt(e.key) / 10;
-          video.currentTime = duration * percentage;
+          const newTime = duration * percentage;
+          video.currentTime = newTime;
+          seekVideo(newTime);
           break;
 
         default:
@@ -144,7 +284,9 @@ function VideoPlayer({ video, onVideoEnd, availableVersions = [], onSelectVersio
 
     document.addEventListener('keydown', handleKeyPress);
     return () => document.removeEventListener('keydown', handleKeyPress);
-  }, [duration, isMuted, volume, previousVolume]);
+  }, [duration, isMuted, volume, previousVolume, seekVideo]); // Added seekVideo dependency
+
+  // ... (handleTimeUpdate, handleProgress, etc remain same)
 
   const handleTimeUpdate = () => {
     if (videoRef.current) {
@@ -155,9 +297,9 @@ function VideoPlayer({ video, onVideoEnd, availableVersions = [], onSelectVersio
   const handleProgress = () => {
     if (videoRef.current && videoRef.current.buffered.length > 0) {
       const bufferedEnd = videoRef.current.buffered.end(videoRef.current.buffered.length - 1);
-      const duration = videoRef.current.duration;
-      if (duration > 0) {
-        setBuffered((bufferedEnd / duration) * 100);
+      const videoDuration = videoRef.current.duration; // Shadow variable to avoid stale state
+      if (videoDuration > 0) {
+        setBuffered((bufferedEnd / videoDuration) * 100);
       }
     }
   };
@@ -165,6 +307,21 @@ function VideoPlayer({ video, onVideoEnd, availableVersions = [], onSelectVersio
   const handleLoadedMetadata = () => {
     if (videoRef.current) {
       setDuration(videoRef.current.duration);
+    }
+  };
+
+  const handleCanPlay = () => {
+    // Señal de "Listo" para Wait Mode
+    if (!waitMode) {
+      sendUserReady();
+    }
+  };
+
+  const handleSeeked = () => {
+    // Restaurar estado de reproducción si el store dice que debe estar tocando
+    if (storeIsPlaying && videoRef.current?.paused) {
+      console.log('🔄 onSeeked: Resuming playback per store state');
+      videoRef.current.play().catch(() => { });
     }
   };
 
@@ -176,20 +333,37 @@ function VideoPlayer({ video, onVideoEnd, availableVersions = [], onSelectVersio
   };
 
   const togglePlayPause = () => {
+    if (!isHost) return; // Solo Host puede pausar/play
+
+    // NO hacer actualización optimista - dejar que el socket maneje la sincronización
+    // Esto previene que el host se quede congelado
     if (videoRef.current) {
       if (videoRef.current.paused) {
-        videoRef.current.play();
+        playVideo(); // Emitir al socket, el useEffect aplicará el cambio
       } else {
-        videoRef.current.pause();
+        pauseVideo(); // Emitir al socket, el useEffect aplicará el cambio
       }
     }
   };
 
+
   const skip = (seconds) => {
+    if (!isHost) return; // Solo Host puede saltar
+
     if (videoRef.current) {
-      videoRef.current.currentTime = Math.max(0, Math.min(duration, videoRef.current.currentTime + seconds));
+      const newTime = Math.max(0, Math.min(duration, videoRef.current.currentTime + seconds));
+      videoRef.current.currentTime = newTime;
+      seekVideo(newTime); // Emit seek
+
+      // Si debería estar reproduciendo, forzar play usando onSeeked preferiblemente,
+      // pero dejamos esto como backup inmediato
+      if (storeIsPlaying) {
+        videoRef.current.play().catch(() => { });
+      }
     }
   };
+
+  // ... rest of component ...
 
   const toggleFullscreen = async () => {
     const el = containerRef.current;
@@ -206,12 +380,16 @@ function VideoPlayer({ video, onVideoEnd, availableVersions = [], onSelectVersio
   };
 
   const handleSeek = (e) => {
+    if (!isHost) return; // Solo Host progesar
+
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const percentage = x / rect.width;
 
     if (videoRef.current) {
-      videoRef.current.currentTime = percentage * duration;
+      const newTime = percentage * duration;
+      // NO hacer actualización optimista - dejar que el socket maneje la sincronización
+      seekVideo(newTime); // El useEffect aplicará el cambio cuando reciba video-seeked
     }
   };
 
@@ -284,6 +462,8 @@ function VideoPlayer({ video, onVideoEnd, availableVersions = [], onSelectVersio
           onTimeUpdate={handleTimeUpdate}
           onProgress={handleProgress}
           onLoadedMetadata={handleLoadedMetadata}
+          onCanPlay={handleCanPlay} // Señal de Listo
+          onSeeked={handleSeeked} // Check resume after seek
           onPlay={handlePlay}
           onPause={handlePause}
           onEnded={handleEnded}

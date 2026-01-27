@@ -14,6 +14,11 @@ const useStore = create((set, get) => ({
   playlist: [],
   currentVideoIndex: 0,
   isPlaying: false,
+  remoteSeekTime: null, // Para sincronizar seeks
+  timeSyncRequest: null, // Para pedir tiempo al host
+  hostTime: null, // Para sincronización periódica (Drift correction)
+  waitMode: false, // Modo Espera habilitado?
+  usersReady: [], // Lista de usuarios listos (buffered)
 
   // Estado del ranking
   rankings: {}, // { videoId: { userId: tier } }
@@ -24,7 +29,7 @@ const useStore = create((set, get) => ({
   setSocket: (socket) => set({ socket }),
 
   // Acciones de sala
-  createRoom: (userName, customRoomName) => {
+  createRoom: (userName, customRoomName, waitMode) => {
     const socket = get().socket;
     const roomId = Math.random().toString(36).substring(2, 8).toUpperCase();
     const user = {
@@ -33,7 +38,7 @@ const useStore = create((set, get) => ({
       isHost: true,
     };
 
-    set({ currentUser: user });
+    set({ currentUser: user, waitMode }); // Save locally too
 
     // Emitir evento de socket
     if (socket) {
@@ -41,7 +46,8 @@ const useStore = create((set, get) => ({
         roomId,
         roomName: customRoomName || `Sala ${userName}`,
         userId: user.id,
-        userName: user.name
+        userName: user.name,
+        waitMode
       });
     }
 
@@ -95,6 +101,20 @@ const useStore = create((set, get) => ({
 
     if (socket && roomId) {
       socket.emit('set-playlist', { roomId, playlist: videos });
+    }
+  },
+
+  setPlaylist: (videos) => {
+    console.log('Store: setPlaylist called', videos.length);
+    const videosWithUuid = videos.map(v => ({ ...v, uuid: crypto.randomUUID() }));
+
+    set({ playlist: videosWithUuid, currentVideoIndex: 0 });
+
+    const socket = get().socket;
+    const roomId = get().roomId;
+
+    if (socket && roomId) {
+      socket.emit('set-playlist', { roomId, playlist: videosWithUuid });
     }
   },
 
@@ -164,6 +184,33 @@ const useStore = create((set, get) => ({
     }
   },
 
+  seekVideo: (currentTime) => {
+    const socket = get().socket;
+    const roomId = get().roomId;
+
+    if (socket && roomId) {
+      socket.emit('seek-video', { roomId, currentTime });
+    }
+  },
+
+  syncTimeResponse: (requesterId, currentTime) => {
+    const socket = get().socket;
+    const roomId = get().roomId;
+
+    if (socket && roomId) {
+      socket.emit('sync-time-response', { roomId, requesterId, currentTime });
+    }
+  },
+
+  sendTimeUpdate: (currentTime) => {
+    const socket = get().socket;
+    const roomId = get().roomId;
+
+    if (socket && roomId) {
+      socket.emit('time-update', { roomId, currentTime });
+    }
+  },
+
   getCurrentVideo: () => {
     const state = get();
     return state.playlist[state.currentVideoIndex] || null;
@@ -217,6 +264,39 @@ const useStore = create((set, get) => ({
     const state = get();
     const map = state.rankings[videoId] || {};
     return Object.entries(map).map(([userId, score]) => ({ userId, score }));
+  },
+
+  getRankingsForVideo: (videoId) => {
+    return get().rankings[videoId] || {};
+  },
+
+  // --- WAIT MODE ACTIONS ---
+  sendUserReady: () => {
+    const socket = get().socket;
+    const roomId = get().roomId;
+    const currentUser = get().currentUser;
+
+    if (socket && roomId && currentUser) {
+      const userId = currentUser.id || currentUser.uid;
+      socket.emit('user-ready', { roomId, userId });
+      console.log('Store: Sending user-ready signal');
+    }
+  },
+
+  forceStart: () => {
+    const socket = get().socket;
+    const roomId = get().roomId;
+    if (socket && roomId) {
+      socket.emit('force-start', { roomId });
+    }
+  },
+
+  updateRoomSettings: (settings) => {
+    const socket = get().socket;
+    const roomId = get().roomId;
+    if (socket && roomId) {
+      socket.emit('update-room-settings', { roomId, settings });
+    }
   },
 
   calculateFinalRankings: () => {
