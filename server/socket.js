@@ -17,9 +17,26 @@ function setupSocket(server) {
         console.log('✅ Usuario conectado:', socket.id);
 
         // ========== CREAR SALA ==========
-        socket.on('create-room', ({ roomId, userId, userName, roomName, waitMode }) => {
+        socket.on('create-room', ({ roomId, userId, userName, roomName, waitMode, authUserId }) => {
+            console.log(`[DEBUG] Request create-room: ID='${roomId}', User='${userName}'`);
+
+            if (!roomId) {
+                console.error('[ERROR] Room ID is missing!');
+                socket.emit('error', { message: 'ID de sala inválido' });
+                return;
+            }
+
             if (activeRooms.has(roomId)) {
-                socket.emit('error', { message: 'La sala ya existe' });
+                console.log(`ℹ️ Sala '${roomId}' ya existe - Probablemente double-emission del cliente (ignorando)`);
+                // En lugar de rechazar, simplemente enviamos confirmación de que la sala existe
+                const room = activeRooms.get(roomId);
+                const roomToSend = {
+                    ...room,
+                    roomId: room.id,
+                    roomName: room.name,
+                    usersReady: Array.from(room.usersReady || new Set())
+                };
+                socket.emit('room-created', { roomId, room: roomToSend });
                 return;
             }
 
@@ -37,7 +54,13 @@ function setupSocket(server) {
             };
 
             // Añadir al creador como primer miembro (y host)
-            room.members.push({ id: userId, name: userName, socketId: socket.id, isHost: true });
+            room.members.push({
+                id: userId,
+                name: userName,
+                socketId: socket.id,
+                isHost: true,
+                authUserId: authUserId || null  // Firebase UID or null for guest users
+            });
             activeRooms.set(roomId, room);
 
             socket.join(roomId);
@@ -55,7 +78,7 @@ function setupSocket(server) {
         });
 
         // ========== UNIRSE A SALA ==========
-        socket.on('join-room', ({ roomId, userId, userName }) => {
+        socket.on('join-room', ({ roomId, userId, userName, authUserId }) => {
             const room = activeRooms.get(roomId);
 
             if (!room) {
@@ -67,7 +90,13 @@ function setupSocket(server) {
             // Verificar si ya está en la sala
             const existingMember = room.members.find(m => m.id === userId);
             if (!existingMember) {
-                room.members.push({ id: userId, name: userName, socketId: socket.id, isHost: false });
+                room.members.push({
+                    id: userId,
+                    name: userName,
+                    socketId: socket.id,
+                    isHost: false,
+                    authUserId: authUserId || null  // Firebase UID or null for guest users
+                });
             } else {
                 // Actualizar socketId si se reconectó
                 existingMember.socketId = socket.id;
@@ -116,7 +145,9 @@ function setupSocket(server) {
 
             // Resetear listos si WaitMode activo
             if (room.usersReady) room.usersReady.clear();
+            if (room.loadingProgress) room.loadingProgress = {}; // Reset progress
             io.to(roomId).emit('users-ready-updated', { usersReady: [] });
+            io.to(roomId).emit('loading-progress-updated', { progress: {}, readyCount: 0, totalCount: room.members.length });
 
             io.to(roomId).emit('playlist-updated', { playlist: room.playlist });
             console.log(`📝 Playlist establecida en sala ${roomId} (${playlist.length} videos)`);
@@ -142,25 +173,7 @@ function setupSocket(server) {
             console.log(`⏸️ Pause en sala ${roomId}`);
         });
 
-        // ========== SEEK ==========
-        socket.on('seek-video', ({ roomId, currentTime }) => {
-            const room = activeRooms.get(roomId);
-            if (!room) return;
-
-            // Broadcast seek to all users in room
-            io.to(roomId).emit('video-seeked', { currentTime });
-            console.log(`⏩ Seek en sala ${roomId} a ${currentTime.toFixed(2)}s`);
-        });
-
-        // ========== SEEK ==========
-        socket.on('seek-video', ({ roomId, currentTime }) => {
-            const room = activeRooms.get(roomId);
-            if (!room) return;
-
-            // Broadcast seek to all users in room
-            io.to(roomId).emit('video-seeked', { currentTime });
-            console.log(`⏩ Seek en sala ${roomId} a ${currentTime.toFixed(2)}s`);
-        });
+        // ========== SEEK (eliminados duplicados) ==========
 
         // ========== SIGUIENTE VIDEO ==========
         socket.on('next-video', ({ roomId }) => {
@@ -173,7 +186,9 @@ function setupSocket(server) {
 
                 // Resetear listos
                 if (room.usersReady) room.usersReady.clear();
+                if (room.loadingProgress) room.loadingProgress = {}; // Reset progress
                 io.to(roomId).emit('users-ready-updated', { usersReady: [] });
+                io.to(roomId).emit('loading-progress-updated', { progress: {}, readyCount: 0, totalCount: room.members.length });
 
                 io.to(roomId).emit('video-changed', {
                     currentVideoIndex: room.currentVideoIndex,
@@ -197,7 +212,9 @@ function setupSocket(server) {
 
             // Resetear listos
             if (room.usersReady) room.usersReady.clear();
+            if (room.loadingProgress) room.loadingProgress = {}; // Reset progress
             io.to(roomId).emit('users-ready-updated', { usersReady: [] });
+            io.to(roomId).emit('loading-progress-updated', { progress: {}, readyCount: 0, totalCount: room.members.length });
 
             io.to(roomId).emit('video-changed', {
                 currentVideoIndex: room.currentVideoIndex
@@ -250,6 +267,7 @@ function setupSocket(server) {
         });
 
         // ========== MODO ESPERA: Lógica de "Listo" ==========
+        // Deprecated: user-ready (Still keeping for backward compatibility if needed, but V2 uses progress)
         socket.on('user-ready', ({ roomId, userId }) => {
             const room = activeRooms.get(roomId);
             if (!room) return;
@@ -261,14 +279,43 @@ function setupSocket(server) {
             io.to(roomId).emit('users-ready-updated', {
                 usersReady: Array.from(room.usersReady)
             });
+        });
 
-            // Auto-Start si todos están listos
-            if (room.waitMode && room.usersReady.size >= room.members.length) {
-                console.log(`🚀 Todos listos en sala ${roomId}. Auto-iniciando.`);
-                room.isPlaying = true;
-                io.to(roomId).emit('force-start-video');
-                io.to(roomId).emit('video-playing'); // Sincronizar estado play
+        // V2: Progress Tracking
+        socket.on('video-load-progress', ({ roomId, userId, percent }) => {
+            const room = activeRooms.get(roomId);
+            if (!room) return;
+
+            // Inicializar tracking si no existe
+            if (!room.loadingProgress) {
+                room.loadingProgress = {};
             }
+
+            // Actualizar progreso del usuario
+            room.loadingProgress[userId] = percent;
+
+            // Calcular cuántos están "Ready" (>= 50%)
+            const progressValues = Object.values(room.loadingProgress);
+            const readyCount = progressValues.filter(p => p >= 50).length;
+
+            // Broadcast a todos
+            io.to(roomId).emit('loading-progress-updated', {
+                progress: room.loadingProgress,
+                readyCount: readyCount,
+                totalCount: room.members.length
+            });
+        });
+
+        // V2: Buffering Status
+        socket.on('user-buffering', ({ roomId, userId, isBuffering }) => {
+            const room = activeRooms.get(roomId);
+            if (!room) return;
+
+            // Retransmitir a todos los demás
+            socket.to(roomId).emit('user-buffering-update', {
+                userId,
+                isBuffering
+            });
         });
 
         socket.on('force-start', ({ roomId }) => {
@@ -286,8 +333,8 @@ function setupSocket(server) {
             const room = activeRooms.get(roomId);
             if (!room) return;
 
-            // Retransmitir a todos EXCEPTO al remitente (para evitar loops)
-            socket.to(roomId).emit('video-seeked', { currentTime });
+            // Broadcast a TODOS incluyendo al emisor (host)
+            io.to(roomId).emit('video-seeked', { currentTime });
             console.log(`⏩ Seek a ${currentTime}s en sala ${roomId}`);
         });
 
@@ -338,12 +385,15 @@ function setupSocket(server) {
                 room.rankings[videoId] = {};
             }
 
+            // Guardar el tier del usuario para este video
+            room.rankings[videoId][userId] = tier;
+
             // Notificar a todos
             io.to(roomId).emit('ranking-updated', {
                 videoId,
                 rankings: room.rankings[videoId]
             });
-            console.log(`⭐ Ranking actualizado en sala ${roomId} - Video: ${videoId}, Score: ${score}`);
+            console.log(`⭐ Ranking actualizado en sala ${roomId} - Video: ${videoId}, Tier: ${tier}`);
         });
 
         // ========== SALIR DE SALA ==========
@@ -352,6 +402,12 @@ function setupSocket(server) {
             if (!room) return;
 
             room.members = room.members.filter(m => m.id !== userId);
+
+            // Clean up progress
+            if (room.loadingProgress && room.loadingProgress[userId]) {
+                delete room.loadingProgress[userId];
+            }
+
             socket.leave(roomId);
 
             if (room.members.length === 0) {
@@ -364,6 +420,17 @@ function setupSocket(server) {
                     userId,
                     members: room.members
                 });
+
+                // Broadcast updated progress since member count decreased
+                if (room.loadingProgress) {
+                    const progressValues = Object.values(room.loadingProgress);
+                    const readyCount = progressValues.filter(p => p >= 50).length;
+                    io.to(roomId).emit('loading-progress-updated', {
+                        progress: room.loadingProgress,
+                        readyCount: readyCount,
+                        totalCount: room.members.length
+                    });
+                }
 
                 // Si el host se fue, asignar nuevo host
                 if (room.host === userId && room.members.length > 0) {
@@ -389,6 +456,11 @@ function setupSocket(server) {
                 if (member) {
                     room.members = room.members.filter(m => m.socketId !== socket.id);
 
+                    // Clean up progress
+                    if (room.loadingProgress && room.loadingProgress[member.id]) {
+                        delete room.loadingProgress[member.id];
+                    }
+
                     if (room.members.length === 0) {
                         activeRooms.delete(roomId);
                         console.log(`🗑️ Sala ${roomId} eliminada (vacía por desconexión)`);
@@ -397,6 +469,17 @@ function setupSocket(server) {
                             userId: member.id,
                             members: room.members
                         });
+
+                        // Broadcast updated progress
+                        if (room.loadingProgress) {
+                            const progressValues = Object.values(room.loadingProgress);
+                            const readyCount = progressValues.filter(p => p >= 50).length;
+                            io.to(roomId).emit('loading-progress-updated', {
+                                progress: room.loadingProgress,
+                                readyCount: readyCount,
+                                totalCount: room.members.length
+                            });
+                        }
 
                         // Si el host se desconectó, asignar nuevo host
                         if (room.host === member.id && room.members.length > 0) {

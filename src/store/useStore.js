@@ -29,24 +29,34 @@ const useStore = create((set, get) => ({
   setSocket: (socket) => set({ socket }),
 
   // Acciones de sala
-  createRoom: (userName, customRoomName, waitMode) => {
+  createRoom: (userName, customRoomName, waitMode, authUserId = null) => {
     const socket = get().socket;
-    const roomId = Math.random().toString(36).substring(2, 8).toUpperCase();
+    // Generar ID único usando timestamp + random para evitar colisiones
+    // Base 36 de timestamp (últimos 4 chars) + 2 chars random
+    const timestamp = Date.now().toString(36).slice(-4);
+    const random = Math.random().toString(36).substring(2, 4);
+    const roomId = (timestamp + random).toUpperCase();
+
+    console.log(`[CLIENT] createRoom called - ID: ${roomId}, User: ${userName}`);
+
     const user = {
       id: Math.random().toString(36).substring(2),
       name: userName,
       isHost: true,
+      authUserId,  // Firebase UID or null for guest users
     };
 
     set({ currentUser: user, waitMode }); // Save locally too
 
     // Emitir evento de socket
     if (socket) {
+      console.log(`[CLIENT] Emitting create-room event for ${roomId}`);
       socket.emit('create-room', {
         roomId,
         roomName: customRoomName || `Sala ${userName}`,
         userId: user.id,
         userName: user.name,
+        authUserId,  // Send authUserId to server
         waitMode
       });
     }
@@ -54,12 +64,13 @@ const useStore = create((set, get) => ({
     return roomId;
   },
 
-  joinRoom: (roomId, userName) => {
+  joinRoom: (roomId, userName, authUserId = null) => {
     const socket = get().socket;
     const user = {
       id: Math.random().toString(36).substring(2),
       name: userName,
       isHost: false,
+      authUserId,  // Firebase UID or null for guest users
     };
 
     set({ currentUser: user });
@@ -68,7 +79,8 @@ const useStore = create((set, get) => ({
       socket.emit('join-room', {
         roomId,
         userId: user.id,
-        userName: user.name
+        userName: user.name,
+        authUserId  // Send authUserId to server
       });
     }
   },
@@ -297,6 +309,57 @@ const useStore = create((set, get) => ({
     if (socket && roomId) {
       socket.emit('update-room-settings', { roomId, settings });
     }
+  },
+
+  // --- WAIT MODE V2 STATE & ACTIONS ---
+  loadingProgress: {}, // { userId: percent }
+  bufferingUsers: [], // [userId]
+
+  sendVideoLoadProgress: (percent) => {
+    const socket = get().socket;
+    const roomId = get().roomId;
+    const currentUser = get().currentUser;
+    if (socket && roomId && currentUser) {
+      socket.emit('video-load-progress', {
+        roomId,
+        userId: currentUser.id || currentUser.uid,
+        percent
+      });
+    }
+  },
+
+  sendUserBuffering: (isBuffering) => {
+    const socket = get().socket;
+    const roomId = get().roomId;
+    const currentUser = get().currentUser;
+    if (socket && roomId && currentUser) {
+      socket.emit('user-buffering', {
+        roomId,
+        userId: currentUser.id || currentUser.uid,
+        isBuffering
+      });
+    }
+  },
+
+  // Called by socket listeners
+  setLoadingProgress: (progress) => {
+    set({ loadingProgress: progress });
+  },
+
+  setBufferingUser: (userId, isBuffering) => {
+    set((state) => {
+      const currentBuffering = state.bufferingUsers;
+      if (isBuffering) {
+        if (!currentBuffering.includes(userId)) return { bufferingUsers: [...currentBuffering, userId] };
+      } else {
+        return { bufferingUsers: currentBuffering.filter(id => id !== userId) };
+      }
+      return {};
+    });
+  },
+
+  resetLoadingState: () => {
+    set({ loadingProgress: {}, bufferingUsers: [] });
   },
 
   calculateFinalRankings: () => {

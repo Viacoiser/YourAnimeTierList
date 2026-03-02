@@ -60,13 +60,13 @@ function Home() {
     }
 
     if (user) {
-      // Logueado: Input = Nombre Sala, User = Profile
+      // Authenticated user: Input = Room Name, User = Profile
       const profileName = user.displayName || user.email?.split('@')[0] || 'Anfitrión';
-      const roomId = createRoom(profileName, userName, waitMode); // (user, roomName, waitMode)
+      const roomId = createRoom(profileName, userName, waitMode, user.uid); // Pass authUserId
       navigate(`/room/${roomId}`);
     } else {
-      // Invitado: Input = Nombre Usuario, Room = Auto
-      const roomId = createRoom(userName, null, waitMode); // (userName, roomName=null, waitMode)
+      // Guest user: Input = User Name, Room = Auto
+      const roomId = createRoom(userName, null, waitMode, null); // authUserId = null
       navigate(`/room/${roomId}`);
     }
   };
@@ -79,8 +79,9 @@ function Home() {
 
     // Si está logueado, usar su nombre de perfil para unirse
     const nameToJoin = user ? (user.displayName || user.email?.split('@')[0]) : userName;
+    const authUserId = user ? user.uid : null; // Get authUserId
 
-    joinRoom(roomCode.toUpperCase(), nameToJoin);
+    joinRoom(roomCode.toUpperCase(), nameToJoin, authUserId); // Pass authUserId
     navigate(`/room/${roomCode.toUpperCase()}`);
   };
 

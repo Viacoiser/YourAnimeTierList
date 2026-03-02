@@ -244,19 +244,36 @@ class AnimeThemesAPI {
         theme.animethemeentries.forEach(entry => {
           if (!entry.videos || entry.videos.length === 0) return;
 
-          // Tomar el primer video disponible (preferiblemente el de mejor calidad)
-          const video = entry.videos.sort((a, b) => {
-            const resA = parseInt(a.resolution) || 0;
-            const resB = parseInt(b.resolution) || 0;
-            return resB - resA;
-          })[0];
+          // Filtrar y ordenar videos disponibles (Solo resoluciones estándar)
+          const allowedResolutions = [1080, 720, 480, 360];
+          const availableVideos = entry.videos
+            .filter(v => allowedResolutions.includes(parseInt(v.resolution)))
+            .sort((a, b) => parseInt(b.resolution) - parseInt(a.resolution));
 
-          const videoUrl = video.link.startsWith('http')
-            ? video.link
-            : `https://v.animethemes.moe/${video.basename}`;
+          // Si no hay videos con res estándar, usar lo que haya
+          const videosToUse = availableVideos.length > 0 ? availableVideos : entry.videos;
+
+          if (videosToUse.length === 0) return;
+
+          // Construir array de fuentes
+          const sources = videosToUse.map(v => ({
+            resolution: parseInt(v.resolution) || 0,
+            url: v.link.startsWith('http') ? v.link : `https://v.animethemes.moe/${v.basename}`,
+            size: v.size // Si existe en API
+          }));
+
+          // Seleccionar video por defecto (Preferir 720p > 480p > 1080p para carga rápida)
+          // Si no encuentra 720 o 480, usa el primero (mejor calidad)
+          const defaultVideo = videosToUse.find(v => parseInt(v.resolution) === 720)
+            || videosToUse.find(v => parseInt(v.resolution) === 480)
+            || videosToUse[0];
+
+          const videoUrl = defaultVideo.link.startsWith('http')
+            ? defaultVideo.link
+            : `https://v.animethemes.moe/${defaultVideo.basename}`;
 
           videos.push({
-            id: `${anime.id}-${theme.id}-${video.id}`,
+            id: `${anime.id}-${theme.id}-${defaultVideo.id}`,
             animeId: anime.id,
             animeName: anime.name,
             animeYear: anime.year,
@@ -267,11 +284,13 @@ class AnimeThemesAPI {
             songTitle: theme.song?.title || 'Unknown Song',
             artist: theme.song?.artists?.map(a => a.name).join(', ') || 'Unknown Artist',
             videoUrl: videoUrl,
-            videoBasename: video.basename,
-            videoFilename: video.filename,
-            resolution: video.resolution,
-            source: video.source,
-            tags: video.tags || '',
+            params: {}, // Placeholder para params
+            sources: sources, // ✅ Nuevo campo con todas las calidades
+            videoBasename: defaultVideo.basename,
+            videoFilename: defaultVideo.filename,
+            resolution: defaultVideo.resolution,
+            source: defaultVideo.source,
+            tags: defaultVideo.tags || '',
             thumbnailUrl: anime.images?.[0]?.link || null,
           });
         });

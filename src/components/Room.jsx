@@ -72,7 +72,8 @@ function Room() {
             roomName: storeRoomName || `Sala ${roomUser.name}`,
             userId: roomUser.id,
             userName: roomUser.name,
-            waitMode: waitMode || false
+            waitMode: waitMode || false,
+            authUserId: roomUser.authUserId || null
           });
         } else {
           console.log('📤 Emitiendo join-room desde Room.jsx (Guest)');
@@ -90,8 +91,36 @@ function Room() {
           });
         }
       }
+
+      // LISTENERS WAIT MODE V2
+      socket.on('loading-progress-updated', (data) => {
+        // data: { progress: {}, readyCount, totalCount }
+        // Actualizar store (podríamos tener acciones dedicadas, o usar setState directo si exponemos setter)
+        // Usamos la acción del store
+        useStore.getState().setLoadingProgress(data.progress);
+        // data.readyCount y totalCount se pueden derivar, o guardar si queremos
+      });
+
+      socket.on('user-buffering-update', ({ userId, isBuffering }) => {
+        useStore.getState().setBufferingUser(userId, isBuffering);
+      });
+
     }
+
+    return () => {
+      if (socket) {
+        socket.off('loading-progress-updated');
+        socket.off('user-buffering-update');
+      }
+    };
   }, [socket, setSocket, roomUser, roomId, storeRoomName, waitMode]);
+
+  useEffect(() => {
+    // Clean up loading state on unmount
+    return () => {
+      useStore.getState().resetLoadingState();
+    };
+  }, []);
 
   useEffect(() => {
     if (!roomUser) {
@@ -118,7 +147,7 @@ function Room() {
     const safetyTimeout = setTimeout(() => {
       console.warn('⚠️ Failsafe activado: forzando fin de carga');
       setLoading(false);
-    }, 5000);
+    }, 15000); // Aumentado a 15s para dar tiempo al proxy/cache
 
     return () => clearTimeout(safetyTimeout);
   }, []);
@@ -469,7 +498,7 @@ function Room() {
               {currentVideo && (
                 <>
                   <div className="relative">
-                    {renderWaitOverlay()}
+                    {/* Wait Overlay movido a VideoPlayer para soporte Fullscreen */}
                     <VideoPlayer
                       video={currentVideo}
                       onVideoEnd={handleVideoEnd}

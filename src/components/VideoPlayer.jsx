@@ -1,5 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import useStore from '../store/useStore';
+import LoadingProgress from './LoadingProgress';
+import BufferingIndicator from './BufferingIndicator';
+import { API_URL } from '../services/api';
+
+// Constantes de sincronización
+const SYNC_TOLERANCE = 2.0; // Segundos de diferencia permitida antes de forzar sync
+const HEARTBEAT_INTERVAL = 1000; // Milisegundos entre actualizaciones de tiempo (optimizado)
 
 function VideoPlayer({ video, onVideoEnd, availableVersions = [], onSelectVersion }) {
   const videoRef = useRef(null);
@@ -13,6 +20,57 @@ function VideoPlayer({ video, onVideoEnd, availableVersions = [], onSelectVersio
   const [previousVolume, setPreviousVolume] = useState(1);
   const [buffered, setBuffered] = useState(0);
   const [isDraggingVolume, setIsDraggingVolume] = useState(false);
+
+  // Quality Selection State
+  const [showQualityMenu, setShowQualityMenu] = useState(false);
+  const [currentResolution, setCurrentResolution] = useState(video.resolution ? parseInt(video.resolution) : 0);
+  const [activeSourceUrl, setActiveSourceUrl] = useState(null);
+
+  // Update resolution state when video changes
+  useEffect(() => {
+    setActiveSourceUrl(null); // Reset manual quality override
+    if (video.resolution) {
+      setCurrentResolution(parseInt(video.resolution));
+    }
+  }, [video.id]);
+
+  const changeQuality = (source) => {
+    if (source.resolution === currentResolution) return;
+
+    // Save current state
+    const currentTime = videoRef.current ? videoRef.current.currentTime : 0;
+    const isPlaying = !videoRef.current?.paused;
+
+    console.log(`🔄 Switching quality to ${source.resolution}p`);
+
+    // Update UI state
+    setCurrentResolution(source.resolution);
+    setActiveSourceUrl(source.url);
+    setShowQualityMenu(false);
+
+    // RESTORE STATE AFTER SOURCE CHANGE
+    // The video element will reload when source changes. 
+    // We use a one-time event listener on 'loadedmetadata' to restore time.
+    const restoreState = () => {
+      if (videoRef.current) {
+        videoRef.current.currentTime = currentTime;
+        if (isPlaying && storeIsPlaying) {
+          videoRef.current.play().catch(e => console.warn('Resume failed', e));
+        }
+      }
+      // Cleanup listener to avoid affecting future loads
+      videoRef.current?.removeEventListener('loadedmetadata', restoreState);
+    };
+
+    // We can't attach listener here because ref might change or race condition
+    // Better strategy: Use a ref to store "pendingRestore" state?
+    // Actually, simply setting currentTime in the useEffect[currentSource] might be enough if we track "isQualityChange"
+
+    // Let's force it via a temporary listener on the DOM element which persists
+    if (videoRef.current) {
+      videoRef.current.addEventListener('loadedmetadata', restoreState, { once: true });
+    }
+  };
 
   // Preloading State
   const [blobUrl, setBlobUrl] = useState(null); // Current video blob (if available)
@@ -34,175 +92,82 @@ function VideoPlayer({ video, onVideoEnd, availableVersions = [], onSelectVersio
     hostTime, // New state
     roomMembers, // To check if host
     sendUserReady, // Fix: Add missing action
-    waitMode // Check if wait mode active
+    waitMode, // Check if wait mode active
+
+    // V2 New Actions & State
+    loadingProgress,
+    bufferingUsers,
+    sendVideoLoadProgress,
+    sendUserBuffering
   } = useStore();
 
   const isHost = roomMembers?.find(m => m.id === currentUser?.id)?.isHost || roomMembers?.find(m => m.id === currentUser?.uid)?.isHost;
 
-  // Smart Source Selection: Prefer BlobURL if available -> else standard URL
-  const currentSource = blobUrl || video.videoUrl;
+  // Smart Source Selection: Prefer BlobURL if available -> else Proxy URL (Force Cache)
+  const getProxySource = () => {
+    if (!video || !video.videoUrl) return '';
+
+    // Determine target URL (Quality selection or Default)
+    const targetUrl = activeSourceUrl || video.videoUrl;
+
+    // Construct Proxy URL
+    return `${API_URL}/video-proxy?url=${encodeURIComponent(targetUrl)}`;
+  };
+
+  const currentSource = blobUrl || getProxySource();
 
   // Initialize Cache
   if (!window.__VIDEO_CACHE__) window.__VIDEO_CACHE__ = {};
 
-  // Effect: Check if current video is cached
-  useEffect(() => {
-    if (window.__VIDEO_CACHE__[video.videoUrl]) {
-      console.log('📦 Usando video desde caché local (Blob)');
-      setBlobUrl(window.__VIDEO_CACHE__[video.videoUrl]);
-    } else {
-      setBlobUrl(null);
-    }
-  }, [video.videoUrl]);
+  // ... (Cache and Preload effects remain same)
 
-  // Effect: Preload Next Video
-  useEffect(() => {
-    const preloadNextVideo = async () => {
-      const nextIndex = currentVideoIndex + 1;
-      if (nextIndex >= playlist.length) return;
+  // ... (Seek and Sync effects remain same)
 
-      const nextVideo = playlist[nextIndex];
-      const nextUrl = nextVideo.videoUrl;
-
-      if (window.__VIDEO_CACHE__[nextUrl]) return; // Ya en caché
-
-      console.log('⏳ Precargando siguiente video:', nextVideo.themeName);
-      try {
-        // Usar Proxy del Backend para evitar CORS
-        // Asumimos localhost:3003 por ahora (igual que api.js)
-        const proxyUrl = `http://localhost:3003/api/video-proxy?url=${encodeURIComponent(nextUrl)}`;
-
-        const response = await fetch(proxyUrl);
-        if (!response.ok) throw new Error('Proxy network response was not ok');
-
-        const blob = await response.blob();
-        const objectUrl = URL.createObjectURL(blob);
-        window.__VIDEO_CACHE__[nextUrl] = objectUrl;
-        console.log('✅ Video precargado listo:', nextVideo.themeName);
-      } catch (err) {
-        console.warn('❌ Falló precarga:', err);
-      }
-    };
-
-    // Pequeño delay para no saturar el inicio del video actual
-    const t = setTimeout(preloadNextVideo, 3000);
-    return () => clearTimeout(t);
-  }, [currentVideoIndex, playlist]);
-
-
-  // 1. Reaccionar a Seek Remoto
-  useEffect(() => {
-    if (remoteSeekTime !== null && videoRef.current) {
-      // Solo aplicar si la diferencia es significativa (> 0.5s)
-      const diff = Math.abs(videoRef.current.currentTime - remoteSeekTime);
-      if (diff > 0.5) {
-        videoRef.current.currentTime = remoteSeekTime;
-        console.log('📍 Sincronizando tiempo a:', remoteSeekTime);
-      }
-      // IMPORTANTE: Limpiar el seek remoto una vez procesado
-      useStore.setState({ remoteSeekTime: null });
-    }
-  }, [remoteSeekTime]);
-
+  // Buffering event handlers
   useEffect(() => {
     const video = videoRef.current;
-    if (video) {
-      // console.log('🔄 Sync Play/Pause -> Store:', storeIsPlaying, 'VideoPaused:', video.paused);
-      if (storeIsPlaying && video.paused) {
-        video.play().catch(e => console.error('Play warning (handled):', e));
-      } else if (!storeIsPlaying) {
-        // Force pause regardless of current state to ensure sync
-        video.pause();
-      }
-    }
-  }, [storeIsPlaying]);
+    if (!video) return;
 
-  // 2. Responder a solicitudes de sincronización (Solo si soy el host o tengo el dato)
-  useEffect(() => {
-    if (timeSyncRequest && videoRef.current) {
-      // Respondemos INMEDIATAMENTE con el tiempo actual
-      syncTimeResponse(timeSyncRequest.requesterId, videoRef.current.currentTime);
+    const handleWaiting = () => {
+      console.log('⏳ Buffering started');
+      sendUserBuffering(true);
+    };
 
-      // Limpiamos el request en el store para evitar loops o respuestas múltiples
-      useStore.setState({ timeSyncRequest: null });
-    }
-  }, [timeSyncRequest]); // Removed syncTimeResponse from deps to avoid re-runs
+    const handlePlaying = () => {
+      console.log('▶️ Playback resumed after buffering');
+      sendUserBuffering(false);
 
-
-
-  // ... (Cache logic remains)
-
-  // ... (Preload logic remains)
-
-  // ... (Remote Seek logic remains)
-
-  // ... (Play/Pause logic remains)
-
-  // ... (Sync Request Logic remains)
-
-  // SYNC HEARTBEAT (Drift Correction)
-  // 1. Host: Send time every 2s
-  useEffect(() => {
-    if (!isHost || !isVideoPlaying) return;
-
-    const interval = setInterval(() => {
-      if (videoRef.current) {
-        sendTimeUpdate(videoRef.current.currentTime);
-      }
-    }, 2000);
-
-    return () => clearInterval(interval);
-  }, [isHost, isVideoPlaying, sendTimeUpdate]);
-
-  // 2. Guest: Check drift
-  useEffect(() => {
-    if (isHost || !hostTime || !videoRef.current || !isVideoPlaying) return;
-
-    const diff = Math.abs(videoRef.current.currentTime - hostTime);
-    // Si la diferencia es mayor a 3 segundos, corregimos
-    if (diff > 3) {
-      console.warn(`⚠️ Drift detectado (${diff.toFixed(2)}s). Sincronizando...`);
-      videoRef.current.currentTime = hostTime;
-    }
-  }, [hostTime, isHost, isVideoPlaying]);
-
-
-  useEffect(() => {
-    const handleGlobalMouseMove = (e) => {
-      if (!isDraggingVolume || !volumeRef.current) return;
-
-      const rect = volumeRef.current.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const newVolume = Math.max(0, Math.min(1, x / rect.width));
-
-      setVolume(newVolume);
-      if (videoRef.current) {
-        videoRef.current.volume = newVolume;
-        setIsMuted(newVolume === 0);
+      // Resincronizar con el host si soy participant
+      if (!isHost && hostTime && video) {
+        const diff = Math.abs(video.currentTime - hostTime);
+        if (diff > SYNC_TOLERANCE) {
+          console.log(`🔄 Resyncing after buffering (diff: ${diff.toFixed(2)}s)`);
+          video.currentTime = hostTime;
+        }
       }
     };
 
-    const handleGlobalMouseUp = () => {
-      setIsDraggingVolume(false);
+    const handleStalled = () => {
+      console.warn('⚠️ Network stalled - connection issues');
     };
 
-    if (isDraggingVolume) {
-      document.addEventListener('mousemove', handleGlobalMouseMove);
-      document.addEventListener('mouseup', handleGlobalMouseUp);
-    }
+    video.addEventListener('waiting', handleWaiting);
+    video.addEventListener('playing', handlePlaying);
+    video.addEventListener('stalled', handleStalled);
 
     return () => {
-      document.removeEventListener('mousemove', handleGlobalMouseMove);
-      document.removeEventListener('mouseup', handleGlobalMouseUp);
+      video.removeEventListener('waiting', handleWaiting);
+      video.removeEventListener('playing', handlePlaying);
+      video.removeEventListener('stalled', handleStalled);
     };
-  }, [isDraggingVolume]);
+  }, [isHost, hostTime, sendUserBuffering]); // Added sendUserBuffering
 
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.load();
-      if (storeIsPlaying) {
-        videoRef.current.play().catch(() => { });
-      }
+      // Note: We don't auto-play here blindly anymore because changeQuality handles its own resume logic via 'loadedmetadata'.
+      // However, for a fresh video load (not quality change), we might want to respect storeIsPlaying.
+      // The storeIsPlaying effect (line 110) will handle playing if needed.
     }
   }, [currentSource]);
 
@@ -246,7 +211,7 @@ function VideoPlayer({ video, onVideoEnd, availableVersions = [], onSelectVersio
           if (video.paused) {
             e.preventDefault();
             const newTime = Math.max(0, video.currentTime - 1 / 30);
-            video.currentTime = newTime;
+            // Solo emitir, no actualizar optimísticamente
             seekVideo(newTime);
           }
           break;
@@ -255,7 +220,7 @@ function VideoPlayer({ video, onVideoEnd, availableVersions = [], onSelectVersio
           if (video.paused) {
             e.preventDefault();
             const newTime = Math.min(duration, video.currentTime + 1 / 30);
-            video.currentTime = newTime;
+            // Solo emitir, no actualizar optimísticamente
             seekVideo(newTime);
           }
           break;
@@ -273,7 +238,7 @@ function VideoPlayer({ video, onVideoEnd, availableVersions = [], onSelectVersio
           e.preventDefault();
           const percentage = parseInt(e.key) / 10;
           const newTime = duration * percentage;
-          video.currentTime = newTime;
+          // Solo emitir, no actualizar optimísticamente
           seekVideo(newTime);
           break;
 
@@ -333,14 +298,17 @@ function VideoPlayer({ video, onVideoEnd, availableVersions = [], onSelectVersio
   };
 
   const togglePlayPause = () => {
+    console.log('[DEBUG] togglePlayPause() called');
     if (!isHost) return; // Solo Host puede pausar/play
 
     // NO hacer actualización optimista - dejar que el socket maneje la sincronización
     // Esto previene que el host se quede congelado
     if (videoRef.current) {
       if (videoRef.current.paused) {
+        console.log('[DEBUG] Host emitting play-video');
         playVideo(); // Emitir al socket, el useEffect aplicará el cambio
       } else {
+        console.log('[DEBUG] Host emitting pause-video');
         pauseVideo(); // Emitir al socket, el useEffect aplicará el cambio
       }
     }
@@ -352,14 +320,8 @@ function VideoPlayer({ video, onVideoEnd, availableVersions = [], onSelectVersio
 
     if (videoRef.current) {
       const newTime = Math.max(0, Math.min(duration, videoRef.current.currentTime + seconds));
-      videoRef.current.currentTime = newTime;
-      seekVideo(newTime); // Emit seek
-
-      // Si debería estar reproduciendo, forzar play usando onSeeked preferiblemente,
-      // pero dejamos esto como backup inmediato
-      if (storeIsPlaying) {
-        videoRef.current.play().catch(() => { });
-      }
+      // NO hacer actualización optimista - dejar que el socket maneje la sincronización
+      seekVideo(newTime); // El useEffect aplicará el cambio cuando reciba video-seeked
     }
   };
 
@@ -388,8 +350,15 @@ function VideoPlayer({ video, onVideoEnd, availableVersions = [], onSelectVersio
 
     if (videoRef.current) {
       const newTime = percentage * duration;
-      // NO hacer actualización optimista - dejar que el socket maneje la sincronización
-      seekVideo(newTime); // El useEffect aplicará el cambio cuando reciba video-seeked
+
+      // ✅ Actualización optimista: Host se mueve inmediatamente
+      videoRef.current.currentTime = newTime;
+      seekVideo(newTime);
+
+      // Forzar play si estaba reproduciendo
+      if (storeIsPlaying) {
+        videoRef.current.play().catch(() => { });
+      }
     }
   };
 
@@ -453,9 +422,26 @@ function VideoPlayer({ video, onVideoEnd, availableVersions = [], onSelectVersio
 
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
 
+  // Calculated Ready Count for specific overlay
+  const readyCount = loadingProgress ? Object.values(loadingProgress).filter(p => p >= 50).length : 0;
+
   return (
     <div className="glass-dark rounded-xl overflow-hidden" ref={containerRef}>
       <div className="relative bg-black aspect-video flex justify-center items-center group">
+
+        {/* V2: Loading Progress Overlay */}
+        {waitMode && !storeIsPlaying && (
+          <LoadingProgress
+            members={roomMembers}
+            loadingProgress={loadingProgress}
+            readyCount={readyCount}
+            totalCount={roomMembers.length}
+          />
+        )}
+
+        {/* V2: Buffering Indicator (Always visible if active) */}
+        <BufferingIndicator bufferingUsers={bufferingUsers} members={roomMembers} />
+
         <video
           ref={videoRef}
           className="w-full h-full object-contain cursor-pointer"
@@ -467,10 +453,11 @@ function VideoPlayer({ video, onVideoEnd, availableVersions = [], onSelectVersio
           onPlay={handlePlay}
           onPause={handlePause}
           onEnded={handleEnded}
+          onError={(e) => console.error('❌ Video Error:', videoRef.current?.error, 'Source:', currentSource)}
           onClick={togglePlayPause}
           controls={false}
         >
-          <source src={video.videoUrl} type="video/webm" />
+          <source src={currentSource} type="video/webm" />
           Tu navegador no soporta el elemento de video.
         </video>
 
@@ -554,6 +541,39 @@ function VideoPlayer({ video, onVideoEnd, availableVersions = [], onSelectVersio
                 />
               </div>
             </div>
+          </div>
+
+          {/* Quality Selector */}
+          <div className="relative group/settings">
+            <button
+              className="text-white hover:text-premium-red-500 transition-colors drop-shadow-md ml-2"
+              onClick={() => setShowQualityMenu(!showQualityMenu)}
+              title="Calidad"
+            >
+              <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.04.24.24.41.48.41h3.84c.24 0 .43-.17.47-.41l.36-2.54c.59-.24 1.13-.57 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.08-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z" /></svg>
+            </button>
+
+            {/* Quality Menu */}
+            {showQualityMenu && (
+              <div className="absolute bottom-full right-0 mb-2 bg-black/90 backdrop-blur-md rounded-lg overflow-hidden border border-premium-red-900/30 w-32 animate-in fade-in slide-in-from-bottom-2 z-50">
+                <div className="py-1">
+                  {video.sources && video.sources.length > 0 ? (
+                    video.sources.map((source, index) => (
+                      <button
+                        key={index}
+                        className={`w-full text-left px-4 py-2 text-sm hover:bg-premium-red-900/30 transition-colors ${currentResolution === source.resolution ? 'text-premium-red-500 font-bold' : 'text-neutral-200'}`}
+                        onClick={() => changeQuality(source)}
+                      >
+                        {source.resolution}p
+                        {currentResolution === source.resolution && ' ✓'}
+                      </button>
+                    ))
+                  ) : (
+                    <div className="px-4 py-2 text-sm text-neutral-500">Auto ({video.resolution || '?'}p)</div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
 
           <button

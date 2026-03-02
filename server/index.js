@@ -10,6 +10,12 @@ const cookieParser = require('cookie-parser');
 const setupSocket = require('./socket');
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
+
+// --- CACHE SETUP ---
+const CacheManager = require('./cache-manager');
+const CACHE_DIR = path.join(__dirname, 'video_cache');
+const cacheManager = new CacheManager(CACHE_DIR);
 
 // --- SISTEMA DE LOGS (Guardar en archivo) ---
 const logStream = fs.createWriteStream(path.join(__dirname, 'server_logs.txt'), { flags: 'a' });
@@ -620,42 +626,126 @@ app.get(/^\/api\/proxy\/(.*)/, async (req, res) => {
     }
 });
 
-// --- PROXY PARA VIDEO (Preloading) ---
+// --- PROXY PARA VIDEO (Preloading + Caching) ---
+// Global maps to track downloads
+const activeDownloads = new Set(); // Set<fileHash>
+
 app.get('/api/video-proxy', async (req, res) => {
     const videoUrl = req.query.url;
     if (!videoUrl) return res.status(400).send('URL required');
 
+    // Generar nombre de archivo único para caché (Hash MD5 de la URL)
+    const fileHash = crypto.createHash('md5').update(videoUrl).digest('hex');
+    const tempPath = path.join(CACHE_DIR, `${fileHash}.part`);
+    const finalPath = path.join(CACHE_DIR, `${fileHash}.mp4`);
+
+    // Helper para servir archivo
+    const serveFile = (filePath, resToServe, reqToServe) => {
+        if (!fs.existsSync(filePath)) {
+            return resToServe.status(404).send('File missing');
+        }
+
+        const stat = fs.statSync(filePath);
+        const fileSize = stat.size;
+        const range = reqToServe.headers.range;
+
+        if (range) {
+            const parts = range.replace(/bytes=/, "").split("-");
+            const start = parseInt(parts[0], 10);
+            const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+
+            if (start >= fileSize) {
+                resToServe.status(416).send('Requested range not satisfiable');
+                return;
+            }
+
+            const chunksize = (end - start) + 1;
+            const file = fs.createReadStream(filePath, { start, end });
+            const head = {
+                'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+                'Accept-Ranges': 'bytes',
+                'Content-Length': chunksize,
+                'Content-Type': 'video/mp4',
+            };
+            resToServe.writeHead(206, head);
+            file.pipe(resToServe);
+        } else {
+            const head = {
+                'Content-Length': fileSize,
+                'Content-Type': 'video/mp4',
+            };
+            resToServe.writeHead(200, head);
+            fs.createReadStream(filePath).pipe(resToServe);
+        }
+    };
+
+    // 1. Check if cached (Fast Path)
+    if (cacheManager.get(fileHash) || fs.existsSync(finalPath)) {
+        if (!cacheManager.get(fileHash)) cacheManager.set(fileHash);
+        return serveFile(finalPath, res, req);
+    }
+
+    // 2. Cache Miss - Download & Stream
+    // Determinar si somos el "Writer" (el primero en llegar)
+    // Si ya hay alguien descargando (activeDownloads has hash), nosotros SOLO descargamos (no escribimos)
+    // Esto cumple: "Los demás si lo piden también descargan" (Concurrent Download)
+    const isWriter = !activeDownloads.has(fileHash);
+
+    if (isWriter) {
+        activeDownloads.add(fileHash);
+        console.log(`[CACHE MISS] Iniciando descarga (WRITER): ${videoUrl}`);
+    } else {
+        console.log(`[CACHE MISS] Iniciando descarga concurrente (NO WRITER): ${videoUrl}`);
+    }
+
     try {
-        console.log(`[PROXY VIDEO] Streaming: ${videoUrl}`);
         const response = await axios({
             method: 'get',
             url: videoUrl,
             responseType: 'stream',
             headers: {
-                'User-Agent': 'YourAnimeTierList/1.0',
-                'Referer': 'https://animethemes.moe/'
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
             }
         });
 
-        // Copiar headers importantes
+        // Copiar headers
         if (response.headers['content-type']) res.set('Content-Type', response.headers['content-type']);
         if (response.headers['content-length']) res.set('Content-Length', response.headers['content-length']);
 
+        // Pipe DIRECTO al usuario (Stream inmediato, CERO espera)
         response.data.pipe(res);
+
+        // Si somos Writer, guardamos copia en disco
+        if (isWriter) {
+            const writer = fs.createWriteStream(tempPath);
+            response.data.pipe(writer);
+
+            writer.on('finish', () => {
+                console.log(`[CACHE SAVED] Descarga finalizada: ${videoUrl}`);
+                fs.renameSync(tempPath, finalPath);
+                cacheManager.set(fileHash);
+                activeDownloads.delete(fileHash);
+            });
+
+            writer.on('error', (err) => {
+                console.error('Error escribiendo caché:', err);
+                activeDownloads.delete(fileHash);
+                try { fs.unlinkSync(tempPath); } catch (e) { }
+            });
+        }
+
     } catch (error) {
-        console.error('Video Proxy Error Direct:', error.toJSON ? error.toJSON() : error);
-        console.error('Video Proxy Error Message:', error.message);
-        if (error.response) {
-            console.error('Upstream Response Status:', error.response.status);
-            console.error('Upstream Response Headers:', error.response.headers);
-        } else {
-            console.error('No Response Object found in error. Keys:', Object.keys(error));
+        console.error('Video Proxy Error:', error.message);
+        if (isWriter) {
+            activeDownloads.delete(fileHash);
+            if (fs.existsSync(tempPath)) try { fs.unlinkSync(tempPath); } catch (e) { }
         }
-        // Si es 403/404/503, manejar como recurso no disponible
+
         if (error.response && [403, 404, 503].includes(error.response.status)) {
-            return res.status(404).send('Video not found, forbidden or service unavailable');
+            return res.status(error.response.status).send('Video error');
         }
-        res.status(500).send('Error proxying video');
+        // No enviamos 500 si ya se enviaron headers (pipe)
+        if (!res.headersSent) res.status(500).send('Error proxying video');
     }
 });
 
